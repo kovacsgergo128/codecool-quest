@@ -124,7 +124,7 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
 
         if (map.getPlayer().getCell().getItem() != null) {
-            StringBuilder sb = new StringBuilder("Pick up");
+            StringBuilder sb = new StringBuilder(pickButton.getText());
             sb.append(" ").append(map.getPlayer().getCell().getItem().getTileName());
             pickButton.setText(sb.toString());
             pickButton.setDisable(false);
