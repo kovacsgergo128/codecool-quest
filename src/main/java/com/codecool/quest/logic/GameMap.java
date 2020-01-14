@@ -9,7 +9,6 @@ public class GameMap {
     private Cell[][] cells;
 
     private Player player;
-    private Key key;
 
     public GameMap(int width, int height, CellType defaultCellType) {
         this.width = width;
@@ -42,9 +41,4 @@ public class GameMap {
         return height;
     }
 
-    public Key getKey() {
-        return key;
-    }
-
-    public void setKey(Key key) { this.key = key; }
 }

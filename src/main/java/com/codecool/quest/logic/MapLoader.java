@@ -1,6 +1,7 @@
 package com.codecool.quest.logic;
 
 import com.codecool.quest.logic.Items.Key;
+import com.codecool.quest.logic.Items.Sword;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
 import com.codecool.quest.logic.interactable.Door;
@@ -48,6 +49,10 @@ public class MapLoader {
                         case 'k':
                             cell.setType(CellType.FLOOR);
                             new Key(cell);
+                            break;
+                        case 'S':
+                            cell.setType(CellType.FLOOR);
+                            new Sword(cell);
                             break;
 
                         default:
