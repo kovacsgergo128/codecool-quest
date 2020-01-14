@@ -90,8 +90,8 @@ public class Main extends Application {
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
-            case K:
-                map.getCell(12, 3).getDoor().openDoor();
+            case SPACE:
+                map.getPlayer().pickItem();
                 refresh();
                 break;
         }
