@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -27,9 +28,7 @@ public class Main extends Application {
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     ListView inventory = new ListView();
-    Button pickButton = new Button("Pick up item");
-
-
+    Button pickButton = new Button("Pick up");
 
     public static void main(String[] args) {
         launch(args);
@@ -45,9 +44,9 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
         ui.add(new Label("Inventory:"), 0, 2);
-        ui.add(pickButton, 0, 4, 2, 1);
-        pickButton.setDisable(true);
+        ui.add(pickButton, 0, 6, 2, 1);
 
+        pickButton.setDisable(true);
 
         ui.add(inventory,0,3, 2, 1);
         inventory.setOnKeyPressed(this::onKeyPressed);
@@ -90,10 +89,13 @@ public class Main extends Application {
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
-            case SPACE:
-                map.getPlayer().pickItem();
-                refresh();
+            case ENTER:
+                if (map.getPlayer().getCell().getItem() != null) {
+                    map.getPlayer().pickItem();
+                    refresh();
+                }
                 break;
+
         }
     }
 
@@ -122,9 +124,14 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
 
         if (map.getPlayer().getCell().getItem() != null) {
+            StringBuilder sb = new StringBuilder("Pick up");
+            sb.append(" ").append(map.getPlayer().getCell().getItem().getTileName());
+            pickButton.setText(sb.toString());
             pickButton.setDisable(false);
+
         } else {
             pickButton.setDisable(true);
+            pickButton.setText("Pick up");
         }
     }
 }
