@@ -18,4 +18,11 @@ public class Player extends Actor {
         return inventory;
     }
 
+    @Override
+    public void move(int dx, int dy) {
+        super.move(dx, dy);
+        if (super.cell.getItem() != null) {
+            this.inventory.addItem(cell.getItem());
+        }
+    }
 }

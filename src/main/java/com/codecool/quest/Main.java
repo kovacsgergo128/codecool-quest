@@ -2,6 +2,7 @@ package com.codecool.quest;
 
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.GameMap;
+import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -40,7 +41,9 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
 
+        inventory.getItems().add("asd");
         ui.add(inventory,0,1, 2, 1);
+        inventory.setOnKeyPressed(this::onKeyPressed);
 
         BorderPane borderPane = new BorderPane();
 
@@ -75,6 +78,7 @@ public class Main extends Application {
                 refresh();
                 break;
         }
+
     }
 
     private void refresh() {
@@ -83,6 +87,7 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
+
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
                 }else if(cell.getItem() != null) {
@@ -92,7 +97,10 @@ public class Main extends Application {
                 }
             }
         }
-
+        inventory.getItems().clear();
+        for (Items item : map.getPlayer().getInventory().getItems()) {
+            inventory.getItems().add(item.getTileName());
+        }
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
 }

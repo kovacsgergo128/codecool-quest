@@ -1,6 +1,6 @@
 package com.codecool.quest.logic;
 
-import com.codecool.quest.logic.items.Items;
+import com.codecool.quest.logic.Items.Items;
 
 import java.util.ArrayList;
 
