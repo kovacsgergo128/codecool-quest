@@ -2,14 +2,16 @@ package com.codecool.quest.logic.actors;
 
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.Inventory;
-import com.codecool.quest.logic.actors.Actor;
+import com.codecool.quest.logic.Items.Key;
 
 public class Player extends Actor {
     Inventory inventory = new Inventory();
+
     public Player(Cell cell) {
         super(cell);
     }
 
+    @Override
     public String getTileName() {
         return "player";
     }
@@ -18,16 +20,18 @@ public class Player extends Actor {
         return inventory;
     }
 
-    //@Override
-    // public void move(int dx, int dy) {
-        //super.move(dx, dy);
-        //if (super.cell.getItem() != null) {
-            //this.inventory.addItem(cell.getItem());
-            //this.cell.setItem(null);
-       // }
-    //}
     public void pickItem() {
         this.inventory.addItem(this.cell.getItem());
         this.cell.setItem(null);
+    }
+
+    @Override
+    public void move(int dx, int dy) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
+        if (nextCell.getDoor() != null && nextCell.getDoor().isLocked() && this.inventory.contains("key")) {
+            this.inventory.removeItemByItemName("key");
+            nextCell.getDoor().openDoor();
+        }
+        super.move(dx, dy);
     }
 }
