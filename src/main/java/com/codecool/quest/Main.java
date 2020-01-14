@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -28,8 +29,9 @@ public class Main extends Application {
     Label healthLabel = new Label();
     ListView inventory = new ListView();
     Button pickButton = new Button("Pick up item");
-
-
+    Label itemToPick = new Label();
+    Label labelForPick = new Label("Item to pick: ");
+    Image item;
 
     public static void main(String[] args) {
         launch(args);
@@ -45,9 +47,13 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
         ui.add(new Label("Inventory:"), 0, 2);
-        ui.add(pickButton, 0, 4, 2, 1);
-        pickButton.setDisable(true);
+        ui.add(pickButton, 0, 6, 2, 1);
+        ui.add(itemToPick, 1, 5);
+        ui.add(labelForPick, 0, 5);
 
+        pickButton.setDisable(true);
+        itemToPick.setVisible(false);
+        labelForPick.setVisible(false);
 
         // inventory.getItems().add("asd");
         ui.add(inventory,0,3, 2, 1);
@@ -119,8 +125,14 @@ public class Main extends Application {
 
         if (map.getPlayer().getCell().getItem() != null) {
             pickButton.setDisable(false);
+            labelForPick.setVisible(true);
+            itemToPick.setText(map.getPlayer().getCell().getItem().getTileName());
+            itemToPick.setVisible(true);
+
         } else {
             pickButton.setDisable(true);
+            itemToPick.setVisible(false);
+            labelForPick.setVisible(false);
         }
     }
 }
