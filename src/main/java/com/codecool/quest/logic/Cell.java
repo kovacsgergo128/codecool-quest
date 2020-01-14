@@ -51,4 +51,8 @@ public class Cell implements Drawable {
     public int getY() {
         return y;
     }
+
+    public boolean isOccupied() {
+        return (this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null));
+    }
 }
