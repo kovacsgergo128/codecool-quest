@@ -8,7 +8,7 @@ public class Inventory {
     private ArrayList<Items> items;
 
     public Inventory() {
-        items = new ArrayList<Items>();
+        items = new ArrayList<>();
     }
 
     public void addItem(Items item){
@@ -19,8 +19,26 @@ public class Inventory {
         items.remove(item);
     }
 
+    public void removeItemByItemName(String itemName){
+        for (Items item: items) {
+            if (item.getTileName().equals(itemName)) {
+                removeItem(item);
+                break;
+            }
+        }
+    }
+
     public ArrayList<Items> getItems() {
         return items;
+    }
+
+    public boolean contains(String itemName) {
+        for (Items item: items) {
+            if (item.getTileName().equals(itemName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setItems(ArrayList<Items> items) {
