@@ -5,10 +5,12 @@ import com.codecool.quest.logic.GameMap;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
@@ -25,6 +27,8 @@ public class Main extends Application {
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     ListView inventory = new ListView();
+    Button pickButton = new Button("Pick up item");
+
 
 
     public static void main(String[] args) {
@@ -40,8 +44,11 @@ public class Main extends Application {
 
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
+        ui.add(pickButton, 0, 2, 3, 1);
+        pickButton.setDisable(true);
 
-        inventory.getItems().add("asd");
+
+        // inventory.getItems().add("asd");
         ui.add(inventory,0,1, 2, 1);
         inventory.setOnKeyPressed(this::onKeyPressed);
 
@@ -54,9 +61,15 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
+        pickButton.setOnAction(this::onPickButtonClick);
 
         primaryStage.setTitle("Codecool Quest");
         primaryStage.show();
+    }
+
+    private void onPickButtonClick(ActionEvent actionEvent) {
+        map.getPlayer().pickItem();
+        refresh();
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
@@ -102,5 +115,11 @@ public class Main extends Application {
             inventory.getItems().add(item.getTileName());
         }
         healthLabel.setText("" + map.getPlayer().getHealth());
+
+        if (map.getPlayer().getCell().getItem() != null) {
+            pickButton.setDisable(false);
+        } else {
+            pickButton.setDisable(true);
+        }
     }
 }

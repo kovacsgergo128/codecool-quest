@@ -18,12 +18,16 @@ public class Player extends Actor {
         return inventory;
     }
 
-    @Override
-    public void move(int dx, int dy) {
-        super.move(dx, dy);
-        if (super.cell.getItem() != null) {
-            this.inventory.addItem(cell.getItem());
-            this.cell.setItem(null);
-        }
+    //@Override
+    // public void move(int dx, int dy) {
+        //super.move(dx, dy);
+        //if (super.cell.getItem() != null) {
+            //this.inventory.addItem(cell.getItem());
+            //this.cell.setItem(null);
+       // }
+    //}
+    public void pickItem() {
+        this.inventory.addItem(this.cell.getItem());
+        this.cell.setItem(null);
     }
 }
