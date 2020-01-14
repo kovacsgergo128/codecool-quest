@@ -44,12 +44,13 @@ public class Main extends Application {
 
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
-        ui.add(pickButton, 0, 2, 3, 1);
+        ui.add(new Label("Inventory:"), 0, 2);
+        ui.add(pickButton, 0, 4, 2, 1);
         pickButton.setDisable(true);
 
 
         // inventory.getItems().add("asd");
-        ui.add(inventory,0,1, 2, 1);
+        ui.add(inventory,0,3, 2, 1);
         inventory.setOnKeyPressed(this::onKeyPressed);
 
         BorderPane borderPane = new BorderPane();
