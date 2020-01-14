@@ -28,10 +28,7 @@ public class Main extends Application {
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     ListView inventory = new ListView();
-    Button pickButton = new Button("Pick up item");
-    Label itemToPick = new Label();
-    Label labelForPick = new Label("Item to pick: ");
-    Image item;
+    Button pickButton = new Button("Pick up");
 
     public static void main(String[] args) {
         launch(args);
@@ -48,12 +45,8 @@ public class Main extends Application {
         ui.add(healthLabel, 1, 0);
         ui.add(new Label("Inventory:"), 0, 2);
         ui.add(pickButton, 0, 6, 2, 1);
-        ui.add(itemToPick, 1, 5);
-        ui.add(labelForPick, 0, 5);
 
         pickButton.setDisable(true);
-        itemToPick.setVisible(false);
-        labelForPick.setVisible(false);
 
         // inventory.getItems().add("asd");
         ui.add(inventory,0,3, 2, 1);
@@ -97,6 +90,13 @@ public class Main extends Application {
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
+            case ENTER:
+                if (map.getPlayer().getCell().getItem() != null) {
+                    map.getPlayer().pickItem();
+                    refresh();
+                }
+                break;
+
         }
 
     }
@@ -124,15 +124,14 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
 
         if (map.getPlayer().getCell().getItem() != null) {
+            StringBuilder sb = new StringBuilder("Pick up");
+            sb.append(" ").append(map.getPlayer().getCell().getItem().getTileName());
+            pickButton.setText(sb.toString());
             pickButton.setDisable(false);
-            labelForPick.setVisible(true);
-            itemToPick.setText(map.getPlayer().getCell().getItem().getTileName());
-            itemToPick.setVisible(true);
 
         } else {
             pickButton.setDisable(true);
-            itemToPick.setVisible(false);
-            labelForPick.setVisible(false);
+            pickButton.setText("Pick up");
         }
     }
 }
