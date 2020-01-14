@@ -73,7 +73,7 @@ public class Cell implements Drawable {
     }
 
     public boolean isValidDest() {
-        return !(this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null) || (this.getDoor() != null && this.door.isLocked()));
+        return !(this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null) || (this.door != null && this.door.isLocked()));
     }
 
     public Door getDoor() {
