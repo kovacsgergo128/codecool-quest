@@ -52,7 +52,11 @@ public class Cell implements Drawable {
         return y;
     }
 
-    public boolean isOccupied() {
-        return (this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null));
+    public boolean isValidMove(int dirX, int dirY) {
+        return !(this.getX() + dirX < 0 || this.getX() + dirX >= this.gameMap.getWidth() || this.getY() + dirY < 0 || this.getY() + dirY >= this.gameMap.getHeight());
+    }
+
+    public boolean isValidDest() {
+        return !(this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null));
     }
 }
