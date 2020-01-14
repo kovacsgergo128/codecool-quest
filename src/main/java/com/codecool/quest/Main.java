@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -22,6 +23,8 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    ListView inventory = new ListView();
+
 
     public static void main(String[] args) {
         launch(args);
@@ -32,9 +35,14 @@ public class Main extends Application {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
+        ui.setVgap(10);
 
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
+
+//        inventory.prefWidth(150);
+        inventory.getItems().add("asd");
+        ui.add(inventory,0,1, 2, 1);
 
         BorderPane borderPane = new BorderPane();
 
@@ -84,6 +92,7 @@ public class Main extends Application {
                 }
             }
         }
+
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
 }
