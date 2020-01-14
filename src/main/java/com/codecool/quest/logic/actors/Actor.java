@@ -14,11 +14,13 @@ public abstract class Actor implements Drawable {
     }
 
     public void move(int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
-        if (!nextCell.isOccupied()) {
-            cell.setActor(null);
-            nextCell.setActor(this);
-            cell = nextCell;
+        if (cell.isValidMove(dx, dy)) { // if it's within the game bounds
+            Cell nextCell = cell.getNeighbor(dx, dy);
+            if (nextCell.isValidDest()) { // if the next cell is unoccupied
+                cell.setActor(null);
+                nextCell.setActor(this);
+                cell = nextCell;
+            }
         }
     }
 
