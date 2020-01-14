@@ -28,7 +28,11 @@ public class Cell implements Drawable {
     }
 
     public Actor getActor() {
-        return actor;
+        try {
+            return actor;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public Cell getNeighbor(int dx, int dy) {
