@@ -40,8 +40,6 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
 
-//        inventory.prefWidth(150);
-        inventory.getItems().add("asd");
         ui.add(inventory,0,1, 2, 1);
 
         BorderPane borderPane = new BorderPane();
