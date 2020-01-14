@@ -23,6 +23,7 @@ public class Player extends Actor {
         super.move(dx, dy);
         if (super.cell.getItem() != null) {
             this.inventory.addItem(cell.getItem());
+            this.cell.setItem(null);
         }
     }
 }
