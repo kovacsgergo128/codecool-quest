@@ -1,12 +1,12 @@
 package com.codecool.quest.logic;
 
 import com.codecool.quest.logic.actors.Actor;
-import com.codecool.quest.logic.interactable.Interactable;
+import com.codecool.quest.logic.interactable.Door;
 
 public class Cell implements Drawable {
     private CellType type;
     private Actor actor;
-    private Interactable interactable;
+    private Door door;
     private GameMap gameMap;
     private int x, y;
 
@@ -63,14 +63,18 @@ public class Cell implements Drawable {
     }
 
     public boolean isValidDest() {
-        return !(this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null));
+        return !(this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null) || (this.getDoor() != null && this.door.isLocked()));
     }
 
-    public Interactable getInteractable() {
-        return interactable;
+    public Door getDoor() {
+        try {
+            return door;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
-    public void setInteractable(Interactable interactable) {
-        this.interactable = interactable;
+    public void setDoor(Door door) {
+        this.door = door;
     }
 }
