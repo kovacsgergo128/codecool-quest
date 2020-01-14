@@ -2,6 +2,7 @@ package com.codecool.quest;
 
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.GameMap;
+import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -22,6 +24,8 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    ListView inventory = new ListView();
+
 
     public static void main(String[] args) {
         launch(args);
@@ -32,9 +36,14 @@ public class Main extends Application {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
+        ui.setVgap(10);
 
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
+
+        inventory.getItems().add("asd");
+        ui.add(inventory,0,1, 2, 1);
+        inventory.setOnKeyPressed(this::onKeyPressed);
 
         BorderPane borderPane = new BorderPane();
 
@@ -69,6 +78,7 @@ public class Main extends Application {
                 refresh();
                 break;
         }
+
     }
 
     private void refresh() {
@@ -77,12 +87,19 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
+
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
+                }else if(cell.getItem() != null) {
+                    Tiles.drawTile(context, cell.getItem(), x, y);
                 } else {
                     Tiles.drawTile(context, cell, x, y);
                 }
             }
+        }
+        inventory.getItems().clear();
+        for (Items item : map.getPlayer().getInventory().getItems()) {
+            inventory.getItems().add(item.getTileName());
         }
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
