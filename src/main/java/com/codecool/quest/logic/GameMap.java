@@ -42,5 +42,9 @@ public class GameMap {
         return height;
     }
 
+    public Key getKey() {
+        return key;
+    }
+
     public void setKey(Key key) { this.key = key; }
 }
