@@ -4,6 +4,7 @@ import com.codecool.quest.logic.Items.Riches;
 import com.codecool.quest.logic.Items.TurkeyLeg;
 import com.codecool.quest.logic.Items.Key;
 import com.codecool.quest.logic.Items.Sword;
+import com.codecool.quest.logic.actors.Boss;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
 import com.codecool.quest.logic.decorations.*;
@@ -76,6 +77,10 @@ public class MapLoader {
                         case 'w':
                             cell.setType(CellType.FLOOR);
                             new Web(cell);
+                            break;
+                        case 'B':
+                            cell.setType(CellType.FLOOR);
+                            new Boss(cell);
                             break;
                         case 'r':
                             cell.setType(CellType.FLOOR);
