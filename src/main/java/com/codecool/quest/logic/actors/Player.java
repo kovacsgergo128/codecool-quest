@@ -5,6 +5,7 @@ import com.codecool.quest.logic.Inventory;
 import com.codecool.quest.logic.Items.Key;
 
 public class Player extends Actor {
+    private String name = "Player";
     Inventory inventory = new Inventory();
 
     public Player(Cell cell) {
@@ -28,20 +29,31 @@ public class Player extends Actor {
     @Override
     public void move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if (nextCell.getActor() instanceof Npc){
+        if (nextCell.getActor() instanceof Npc) {
             attack(nextCell.getActor());
             return;
         }
-        if (nextCell.getDoor() != null && nextCell.getDoor().isLocked() && this.inventory.contains("key")) {
-            this.inventory.removeItemByItemName("key");
-            nextCell.getDoor().openDoor();
+        if (nextCell != null && nextCell.getDoor() != null && nextCell.getDoor().isLocked() && this.inventory.contains("key")) {
+                this.inventory.removeItemByItemName("key");
+                nextCell.getDoor().openDoor();
+            } else if (nextCell != null && nextCell.getDecor() != null && (nextCell.getDecor().getTileName().equals("bonfire") || nextCell.getDecor().getTileName().equals("spikes"))) {
+                this.setHealth(this.getHealth() - 2);
+            }
+            super.move(dx, dy);
         }
-        super.move(dx, dy);
-    }
+
     @Override
     public void attack(Actor enemy) {
-        enemy.attack(this);
+//        enemy.attack(this);
         enemy.changeHealth(this.inventory.contains("sword")?-10:-5);
     }
 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
