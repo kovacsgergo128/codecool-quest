@@ -1,9 +1,12 @@
 package com.codecool.quest.logic;
 
+import com.codecool.quest.logic.Items.TurkeyLeg;
 import com.codecool.quest.logic.Items.Key;
 import com.codecool.quest.logic.Items.Sword;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
+import com.codecool.quest.logic.decoration.Skull;
+import com.codecool.quest.logic.decoration.Web;
 import com.codecool.quest.logic.interactable.Door;
 
 import java.io.InputStream;
@@ -53,6 +56,18 @@ public class MapLoader {
                         case 'S':
                             cell.setType(CellType.FLOOR);
                             new Sword(cell);
+                            break;
+                        case 'd':
+                            cell.setType(CellType.FLOOR);
+                            new TurkeyLeg(cell);
+                            break;
+                        case 'b':
+                            cell.setType(CellType.FLOOR);
+                            new Skull(cell);
+                            break;
+                        case 'w':
+                            cell.setType(CellType.FLOOR);
+                            new Web(cell);
                             break;
 
                         default:

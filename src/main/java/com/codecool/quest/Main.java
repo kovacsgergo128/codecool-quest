@@ -4,6 +4,9 @@ import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.GameMap;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
+import com.codecool.quest.logic.actors.Actor;
+import com.codecool.quest.logic.actors.Npc;
+import com.codecool.quest.logic.actors.Skeleton;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -21,7 +24,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+
 import java.awt.*;
+
+import java.util.ArrayList;
 
 public class Main extends Application {
     GameMap level1 = MapLoader.loadMap("/map.txt");
@@ -32,7 +38,7 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
-    ListView inventory = new ListView();
+    ListView<String> inventory = new ListView<>();
     Button pickButton = new Button("Pick up");
     Label playerNameLabel = new Label();
     TextField nameInput = new TextField();
@@ -104,7 +110,7 @@ public class Main extends Application {
                 refresh();
                 break;
             case RIGHT:
-                map.getPlayer().move(1,0);
+                map.getPlayer().move(1, 0);
                 refresh();
                 break;
             case ENTER:
@@ -113,11 +119,20 @@ public class Main extends Application {
                     refresh();
                 }
                 break;
-
+            case SHIFT:
+                if (map.getPlayer().getInventory().contains("turkey leg")) {
+                    map.getPlayer().getInventory().removeItemByItemName("turkey leg");
+                    map.getPlayer().setHealth(map.getPlayer().getHealth() + 5);
+                    refresh();
+                }
+                break;
         }
     }
 
     private void refresh() {
+
+        aiMove();
+
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -126,10 +141,12 @@ public class Main extends Application {
 
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
-                }else if(cell.getItem() != null) {
+                } else if (cell.getItem() != null) {
                     Tiles.drawTile(context, cell.getItem(), x, y);
                 } else if (cell.getDoor() != null) {
                     Tiles.drawTile(context, cell.getDoor(), x, y);
+                } else if (cell.getDecor() != null) {
+                    Tiles.drawTile(context, cell.getDecor(), x, y);
                 } else {
                     Tiles.drawTile(context, cell, x, y);
                 }
@@ -143,9 +160,7 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
 
         if (map.getPlayer().getCell().getItem() != null) {
-            StringBuilder sb = new StringBuilder(pickButton.getText());
-            sb.append(" ").append(map.getPlayer().getCell().getItem().getTileName());
-            pickButton.setText(sb.toString());
+            pickButton.setText(pickButton.getText() + " " + map.getPlayer().getCell().getItem().getTileName());
             pickButton.setDisable(false);
 
         } else {
@@ -153,4 +168,20 @@ public class Main extends Application {
             pickButton.setText("Pick up");
         }
     }
+
+    private void aiMove() {
+        ArrayList<Actor> actors = new ArrayList<>();
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                Cell cell = map.getCell(x, y);
+                if (cell.getActor() instanceof Npc){
+                    actors.add(cell.getActor());
+                }
+            }
+        }
+        for (Actor actor : actors){
+            actor.moveAi();
+        }
+    }
+
 }
