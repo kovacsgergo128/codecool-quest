@@ -1,5 +1,6 @@
 package com.codecool.quest.logic;
 
+import com.codecool.quest.logic.Items.TurkeyLeg;
 import com.codecool.quest.logic.Items.Key;
 import com.codecool.quest.logic.Items.Sword;
 import com.codecool.quest.logic.actors.Player;
@@ -53,6 +54,10 @@ public class MapLoader {
                         case 'S':
                             cell.setType(CellType.FLOOR);
                             new Sword(cell);
+                            break;
+                        case 'd':
+                            cell.setType(CellType.FLOOR);
+                            new TurkeyLeg(cell);
                             break;
 
                         default:
