@@ -36,6 +36,7 @@ public class Tiles {
         tileMap.put("skull", new Tile(0,15));
         tileMap.put("web", new Tile(2,15));
         tileMap.put("turkey leg", new Tile(17,28));
+        tileMap.put("bonfire", new Tile(14, 10));
     }
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
