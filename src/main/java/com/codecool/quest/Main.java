@@ -97,7 +97,13 @@ public class Main extends Application {
                     refresh();
                 }
                 break;
-
+            case SHIFT:
+                if (map.getPlayer().getInventory().contains("turkey leg")) {
+                    map.getPlayer().getInventory().removeItemByItemName("turkey leg");
+                    map.getPlayer().setHealth(map.getPlayer().getHealth() + 5);
+                    refresh();
+                }
+                break;
         }
     }
 
