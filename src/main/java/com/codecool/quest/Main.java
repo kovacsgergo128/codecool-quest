@@ -15,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -22,6 +23,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+
+import java.awt.*;
 
 import java.util.ArrayList;
 
@@ -36,6 +40,9 @@ public class Main extends Application {
     Label healthLabel = new Label();
     ListView<String> inventory = new ListView<>();
     Button pickButton = new Button("Pick up");
+    Label playerNameLabel = new Label();
+    TextField nameInput = new TextField();
+    Button setNameButton = new Button("Set Name");
 
     public static void main(String[] args) {
         launch(args);
@@ -57,6 +64,16 @@ public class Main extends Application {
 
         ui.add(inventory,0,3, 2, 1);
         inventory.setOnKeyPressed(this::onKeyPressed);
+
+        ui.add(nameInput, 0, 7);
+        nameInput.setOnKeyPressed(this::onKeyPressed);
+        ui.add(setNameButton, 0, 8);
+        setNameButton.setOnAction(value ->  {
+            map.getPlayer().setName(nameInput.getText());
+            refresh();
+        });
+        setNameButton.setOnKeyPressed(this::onKeyPressed);
+        ui.add(playerNameLabel, 0, 9);
 
         BorderPane borderPane = new BorderPane();
 
@@ -135,6 +152,7 @@ public class Main extends Application {
                 }
             }
         }
+        playerNameLabel.setText("Name: " + map.getPlayer().getName());
         inventory.getItems().clear();
         for (Items item : map.getPlayer().getInventory().getItems()) {
             inventory.getItems().add(item.getTileName());
@@ -142,7 +160,7 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
 
         if (map.getPlayer().getCell().getItem() != null) {
-            pickButton.setText(pickButton.getText() + " " + map.getPlayer().getCell().getItem().getTileName());
+            pickButton.setText("Pick up " + map.getPlayer().getCell().getItem().getTileName());
             pickButton.setDisable(false);
 
         } else {
