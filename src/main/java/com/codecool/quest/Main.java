@@ -8,12 +8,16 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.awt.*;
 
 public class Main extends Application {
     GameMap map = MapLoader.loadMap();
@@ -22,6 +26,9 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    Label playerNameLabel = new Label();
+    TextField nameInput = new TextField();
+    Button setNameButton = new Button("Set Name");
 
     public static void main(String[] args) {
         launch(args);
@@ -33,8 +40,10 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
-        ui.add(new Label("Health: "), 0, 0);
-        ui.add(healthLabel, 1, 0);
+        int rowindex = 0;
+        ui.add(nameInput, 1, rowindex++);
+        ui.add(setNameButton, 1, rowindex++);
+        ui.add(playerNameLabel, 1, rowindex++);
 
         BorderPane borderPane = new BorderPane();
 
@@ -87,5 +96,6 @@ public class Main extends Application {
             }
         }
         healthLabel.setText("" + map.getPlayer().getHealth());
+        playerNameLabel.setText("Name: " + map.getPlayer().getName());
     }
 }
