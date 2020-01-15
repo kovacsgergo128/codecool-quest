@@ -52,7 +52,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         GridPane ui = new GridPane();
-        ui.setPrefWidth(200);
+        ui.setPrefWidth(210);
         ui.setPadding(new Insets(10));
         ui.setVgap(10);
 
