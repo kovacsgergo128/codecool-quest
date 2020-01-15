@@ -5,6 +5,7 @@ import com.codecool.quest.logic.Inventory;
 import com.codecool.quest.logic.Items.Key;
 
 public class Player extends Actor {
+    private String name = "Player";
     Inventory inventory = new Inventory();
 
     public Player(Cell cell) {
@@ -33,5 +34,13 @@ public class Player extends Actor {
             nextCell.getDoor().openDoor();
         }
         super.move(dx, dy);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
