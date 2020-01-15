@@ -160,7 +160,7 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
 
         if (map.getPlayer().getCell().getItem() != null) {
-            pickButton.setText(pickButton.getText() + " " + map.getPlayer().getCell().getItem().getTileName());
+            pickButton.setText("Pick up " + map.getPlayer().getCell().getItem().getTileName());
             pickButton.setDisable(false);
 
         } else {
