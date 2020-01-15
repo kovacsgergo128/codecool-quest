@@ -1,4 +1,4 @@
-package com.codecool.quest.logic.decoration;
+package com.codecool.quest.logic.decorations;
 
 import com.codecool.quest.logic.Cell;
 
