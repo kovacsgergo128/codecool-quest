@@ -7,6 +7,7 @@ import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
 import com.codecool.quest.logic.decoration.Bonfire;
 import com.codecool.quest.logic.decoration.Skull;
+import com.codecool.quest.logic.decoration.Spikes;
 import com.codecool.quest.logic.decoration.Web;
 import com.codecool.quest.logic.interactable.Door;
 
@@ -69,6 +70,10 @@ public class MapLoader {
                         case 'b':
                             cell.setType(CellType.FLOOR);
                             new Bonfire(cell);
+                            break;
+                        case 't':
+                            cell.setType(CellType.FLOOR);
+                            new Spikes(cell);
                             break;
                         case 'w':
                             cell.setType(CellType.FLOOR);
