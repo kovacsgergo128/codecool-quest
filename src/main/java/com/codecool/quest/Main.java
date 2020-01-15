@@ -21,7 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    GameMap map = MapLoader.loadMap();
+    GameMap level1 = MapLoader.loadMap("/map.txt");
+    GameMap level2 = MapLoader.loadMap("/map2.txt");
+    GameMap map = level1;
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
