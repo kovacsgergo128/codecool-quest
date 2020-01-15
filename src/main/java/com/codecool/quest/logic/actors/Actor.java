@@ -10,6 +10,16 @@ public abstract class Actor implements Drawable {
     protected Cell cell;
     private int health = 10;
 
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    private boolean alive = true;
+
     public Actor(Cell cell) {
         this.cell = cell;
         this.cell.setActor(this);
@@ -22,6 +32,11 @@ public abstract class Actor implements Drawable {
             nextCell.setActor(this);
             cell = nextCell;
         }
+    }
+
+    public void changeHealth(int hp){
+        this.health += hp;
+        onHealthChange();
     }
 
     public int getHealth() {
@@ -40,7 +55,12 @@ public abstract class Actor implements Drawable {
         return cell.getY();
     }
 
-    public void moveAi() {
+    public void moveAi() { }
 
+    public void onHealthChange(){
+        if (this.health <= 0){
+            this.alive = false;
+        }
     }
+
 }
