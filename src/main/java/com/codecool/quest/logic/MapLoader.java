@@ -67,7 +67,7 @@ public class MapLoader {
                             new Skull(cell);
                             break;
                         case 'b':
-                            cell.setType(CellType.WALL);
+                            cell.setType(CellType.FLOOR);
                             new Bonfire(cell);
                             break;
                         case 'w':
