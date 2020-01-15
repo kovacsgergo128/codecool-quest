@@ -20,4 +20,8 @@ public class Stairs implements Drawable {
     public String getTileName() {
         return this.tileName;
     }
+
+    public String getLevel() {
+        return this.toLevel;
+    }
 }

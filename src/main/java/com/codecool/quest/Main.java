@@ -13,12 +13,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 
 public class Main extends Application {
     GameMap level1 = MapLoader.loadMap("/map.txt");
@@ -74,21 +74,26 @@ public class Main extends Application {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
+        Cell nextCell;
         switch (keyEvent.getCode()) {
             case UP:
-                map.getPlayer().move(0, -1);
+                nextCell = map.getPlayer().move(0, -1);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case DOWN:
-                map.getPlayer().move(0, 1);
+                nextCell = map.getPlayer().move(0, 1);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case LEFT:
-                map.getPlayer().move(-1, 0);
+                nextCell = map.getPlayer().move(-1, 0);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case RIGHT:
-                map.getPlayer().move(1,0);
+                nextCell = map.getPlayer().move(1,0);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case ENTER:
@@ -97,7 +102,6 @@ public class Main extends Application {
                     refresh();
                 }
                 break;
-
         }
     }
 
@@ -136,6 +140,23 @@ public class Main extends Application {
         } else {
             pickButton.setDisable(true);
             pickButton.setText("Pick up");
+        }
+    }
+
+    private void changeLevel(Cell nextCell) {
+        if (nextCell.getStairs() != null) {
+            String level = nextCell.getStairs().getLevel();
+            switch (level) {
+            case "level1":
+                this.map = level1;
+                break;
+            case "level2":
+                this.map = level2;
+                break;
+            default:
+                throw new RuntimeException("Unrecognized level: '" + level);
+            }
+            refresh();
         }
     }
 }
