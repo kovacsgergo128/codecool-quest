@@ -33,8 +33,8 @@ public class Tiles {
         tileMap.put("door", new Tile(0, 9));
         tileMap.put("door_open", new Tile(2, 9));
         tileMap.put("sword", new Tile(3,28));
-        tileMap.put("skull", new Tile(0,16));
-        tileMap.put("web", new Tile(2,16));
+        tileMap.put("skull", new Tile(0,15));
+        tileMap.put("web", new Tile(2,15));
         tileMap.put("turkey leg", new Tile(17,28));
     }
 

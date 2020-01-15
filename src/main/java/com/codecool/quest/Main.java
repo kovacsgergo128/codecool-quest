@@ -29,7 +29,7 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
-    ListView inventory = new ListView();
+    ListView<String> inventory = new ListView<>();
     Button pickButton = new Button("Pick up");
 
     public static void main(String[] args) {
@@ -37,7 +37,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
@@ -110,10 +110,12 @@ public class Main extends Application {
 
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
-                }else if(cell.getItem() != null) {
+                } else if (cell.getItem() != null) {
                     Tiles.drawTile(context, cell.getItem(), x, y);
                 } else if (cell.getDoor() != null) {
                     Tiles.drawTile(context, cell.getDoor(), x, y);
+                } else if (cell.getDecor() != null) {
+                    Tiles.drawTile(context, cell.getDecor(), x, y);
                 } else {
                     Tiles.drawTile(context, cell, x, y);
                 }
@@ -126,9 +128,7 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
 
         if (map.getPlayer().getCell().getItem() != null) {
-            StringBuilder sb = new StringBuilder(pickButton.getText());
-            sb.append(" ").append(map.getPlayer().getCell().getItem().getTileName());
-            pickButton.setText(sb.toString());
+            pickButton.setText(pickButton.getText() + " " + map.getPlayer().getCell().getItem().getTileName());
             pickButton.setDisable(false);
 
         } else {
