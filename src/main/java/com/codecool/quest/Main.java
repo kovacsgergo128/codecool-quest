@@ -4,6 +4,9 @@ import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.GameMap;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
+import com.codecool.quest.logic.actors.Actor;
+import com.codecool.quest.logic.actors.Npc;
+import com.codecool.quest.logic.actors.Skeleton;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -19,6 +22,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class Main extends Application {
     GameMap level1 = MapLoader.loadMap("/map.txt");
@@ -88,7 +93,7 @@ public class Main extends Application {
                 refresh();
                 break;
             case RIGHT:
-                map.getPlayer().move(1,0);
+                map.getPlayer().move(1, 0);
                 refresh();
                 break;
             case ENTER:
@@ -102,6 +107,9 @@ public class Main extends Application {
     }
 
     private void refresh() {
+
+        aiMove();
+
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -110,7 +118,7 @@ public class Main extends Application {
 
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
-                }else if(cell.getItem() != null) {
+                } else if (cell.getItem() != null) {
                     Tiles.drawTile(context, cell.getItem(), x, y);
                 } else if (cell.getDoor() != null) {
                     Tiles.drawTile(context, cell.getDoor(), x, y);
@@ -136,4 +144,20 @@ public class Main extends Application {
             pickButton.setText("Pick up");
         }
     }
+
+    private void aiMove() {
+        ArrayList<Actor> actors = new ArrayList<>();
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                Cell cell = map.getCell(x, y);
+                if (cell.getActor() instanceof Npc){
+                    actors.add(cell.getActor());
+                }
+            }
+        }
+        for (Actor actor : actors){
+            actor.moveAi();
+        }
+    }
+
 }
