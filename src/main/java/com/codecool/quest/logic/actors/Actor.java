@@ -45,6 +45,7 @@ public abstract class Actor implements Drawable {
 
     public void setHealth(int num) {
         this.health = num;
+        onHealthChange();
     }
 
     public Cell getCell() {

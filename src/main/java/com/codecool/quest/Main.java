@@ -135,6 +135,7 @@ public class Main extends Application {
         aiMove();
         if (!map.getPlayer().isAlive()){
             map = MapLoader.loadMap("/map.txt");
+            map.getPlayer().setHealth(10);
             return;
         }
 
