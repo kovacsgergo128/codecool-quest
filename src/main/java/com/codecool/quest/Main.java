@@ -87,6 +87,7 @@ public class Main extends Application {
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
         pickButton.setOnAction(this::onPickButtonClick);
+        pickButton.setFocusTraversable(false);
 
         primaryStage.setTitle("Codecool Quest");
         primaryStage.show();
