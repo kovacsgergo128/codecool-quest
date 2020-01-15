@@ -43,4 +43,9 @@ public class Skeleton extends Npc {
         }
     }
 
+    @Override
+    public void attack(Actor actor){
+       actor.changeHealth(-2);
+    }
+
 }

@@ -38,10 +38,11 @@ public class Player extends Actor {
         }
         super.move(dx, dy);
     }
-
-    private void attack(Actor enemy) {
-        this.changeHealth(-2);
-        enemy.changeHealth(-5);
+    @Override
+    public void attack(Actor enemy) {
+//        this.changeHealth(-2);
+        enemy.attack(this);
+        enemy.changeHealth(this.inventory.contains("sword")?-10:-5);
     }
 
 }
