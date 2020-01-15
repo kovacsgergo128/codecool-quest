@@ -2,10 +2,12 @@ package com.codecool.quest.logic;
 
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
+import com.codecool.quest.logic.decorations.Decor;
 import com.codecool.quest.logic.interactable.Door;
 import com.codecool.quest.logic.interactable.Stairs;
 
 public class Cell implements Drawable {
+    private Decor decor;
     private CellType type;
     private Actor actor;
     private Door door;
@@ -31,6 +33,10 @@ public class Cell implements Drawable {
 
     public void setActor(Actor actor) {
         this.actor = actor;
+    }
+
+    public void removeActor(){
+        this.actor = null;
     }
 
     public Items getItem() {
@@ -96,4 +102,10 @@ public class Cell implements Drawable {
     public Stairs getStairs() {
         return this.stairs;
     }
+
+    public Decor getDecor() {
+        return decor;
+    }
+
+    public void setDecor(Decor decor) { this.decor = decor; }
 }
