@@ -28,7 +28,7 @@ public class Skeleton extends Npc {
         for (int[] direction : directions) {
             Cell neighbor = cell.getNeighbor(direction[X], direction[Y]);
             if (neighbor.getActor() instanceof Player){
-//                #TODO Damaging methode HERE!
+                this.attack(neighbor.getActor());
                 return;
             }
             if (neighbor.isValidDest() && neighbor.isValidMove(direction[X], direction[Y])) {

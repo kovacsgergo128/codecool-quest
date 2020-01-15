@@ -40,7 +40,6 @@ public class Player extends Actor {
     }
     @Override
     public void attack(Actor enemy) {
-//        this.changeHealth(-2);
         enemy.attack(this);
         enemy.changeHealth(this.inventory.contains("sword")?-10:-5);
     }
