@@ -4,12 +4,14 @@ import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.decorations.Decor;
 import com.codecool.quest.logic.interactable.Door;
+import com.codecool.quest.logic.interactable.Stairs;
 
 public class Cell implements Drawable {
     private Decor decor;
     private CellType type;
     private Actor actor;
     private Door door;
+    private Stairs stairs;
     private GameMap gameMap;
     private Items item;
     private int x, y;
@@ -92,6 +94,13 @@ public class Cell implements Drawable {
 
     public void setDoor(Door door) {
         this.door = door;
+    }
+
+    public void setStairs(Stairs stairs) {
+        this.stairs = stairs;
+    }
+    public Stairs getStairs() {
+        return this.stairs;
     }
 
     public Decor getDecor() {

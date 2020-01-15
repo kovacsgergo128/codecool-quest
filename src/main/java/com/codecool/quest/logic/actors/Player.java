@@ -27,11 +27,11 @@ public class Player extends Actor {
     }
 
     @Override
-    public void move(int dx, int dy) {
+    public Cell move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
         if (nextCell.getActor() instanceof Npc) {
             attack(nextCell.getActor());
-            return;
+            return nextCell;
         }
         if (nextCell != null &&
             nextCell.getDoor() != null &&
@@ -56,7 +56,7 @@ public class Player extends Actor {
             nextCell.setActor(this);
             cell = nextCell;
         }
-
+        return nextCell;
     }
 
     @Override
@@ -72,5 +72,9 @@ public class Player extends Actor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 }
