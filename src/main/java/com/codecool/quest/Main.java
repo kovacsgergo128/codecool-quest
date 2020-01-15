@@ -67,6 +67,7 @@ public class Main extends Application {
         ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(value ->  {
             map.getPlayer().setName(nameInput.getText());
+            ui.requestFocus();
             refresh();
         });
         setNameButton.setOnKeyPressed(this::onKeyPressed);
@@ -132,7 +133,6 @@ public class Main extends Application {
     }
 
     private void refresh() {
-
         aiMove();
         if (!map.getPlayer().isAlive()){
             map = MapLoader.loadMap("/map.txt");
