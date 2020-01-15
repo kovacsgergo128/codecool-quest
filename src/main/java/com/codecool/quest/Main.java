@@ -3,7 +3,10 @@ package com.codecool.quest;
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.GameMap;
 import com.codecool.quest.logic.MapLoader;
+import com.codecool.quest.logic.actors.Player;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -43,6 +46,10 @@ public class Main extends Application {
         int rowindex = 0;
         ui.add(nameInput, 1, rowindex++);
         ui.add(setNameButton, 1, rowindex++);
+        setNameButton.setOnAction(value ->  {
+            map.getPlayer().setName(nameInput.getText());
+            refresh();
+        });
         ui.add(playerNameLabel, 1, rowindex++);
 
         BorderPane borderPane = new BorderPane();
@@ -79,6 +86,7 @@ public class Main extends Application {
                 break;
         }
     }
+
 
     private void refresh() {
         context.setFill(Color.BLACK);
