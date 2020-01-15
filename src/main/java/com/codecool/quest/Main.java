@@ -59,19 +59,24 @@ public class Main extends Application {
         pickButton.setDisable(true);
 
         ui.add(inventory,0,3, 2, 1);
-        inventory.setOnKeyPressed(this::onKeyPressed);
+        // inventory.setOnKeyPressed(this::onKeyPressed);
+        inventory.setFocusTraversable(false);
 
         ui.add(nameInput, 0, 7);
-        nameInput.setOnKeyPressed(this::onKeyPressed);
+        // nameInput.setOnKeyPressed(this::onKeyPressed);
         ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(value ->  {
             map.getPlayer().setName(nameInput.getText());
-            ui.requestFocus();
+            // ui.requestFocus();
+            canvas.requestFocus();
+            nameInput.clear();
+            nameInput.setFocusTraversable(false);
             refresh();
         });
-        setNameButton.setOnKeyPressed(this::onKeyPressed);
+        //setNameButton.setOnKeyPressed(this::onKeyPressed);
         ui.add(playerNameLabel, 0, 9);
-
+        nameInput.setFocusTraversable(false);
+        setNameButton.setFocusTraversable(false);
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
@@ -179,11 +184,13 @@ public class Main extends Application {
             pickButton.setDisable(true);
             pickButton.setText("Pick up");
         }
+        canvas.requestFocus();
     }
 
     private void changeLevel(Cell nextCell) {
         if (nextCell.getStairs() != null) {
             int health = map.getPlayer().getHealth();
+            String playerName = map.getPlayer().getName();
             Inventory inventory = map.getPlayer().getInventory();
             String level = nextCell.getStairs().getLevel();
             switch (level) {
@@ -192,12 +199,14 @@ public class Main extends Application {
                 this.map = this.level1;
                 this.map.getPlayer().setHealth(health);
                 this.map.getPlayer().setInventory(inventory);
+                this.map.getPlayer().setName(playerName);
                 break;
             case "level2":
                 this.level1 = this.map;
                 this.map = this.level2;
                 this.map.getPlayer().setHealth(health);
                 this.map.getPlayer().setInventory(inventory);
+                this.map.getPlayer().setName(playerName);
                 break;
             default:
                 throw new RuntimeException("Unrecognized level: '" + level);
