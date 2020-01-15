@@ -6,6 +6,7 @@ import com.codecool.quest.logic.Items.Sword;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
 import com.codecool.quest.logic.decoration.Skull;
+import com.codecool.quest.logic.decoration.Web;
 import com.codecool.quest.logic.interactable.Door;
 
 import java.io.InputStream;
@@ -63,6 +64,10 @@ public class MapLoader {
                         case 'b':
                             cell.setType(CellType.FLOOR);
                             new Skull(cell);
+                            break;
+                        case 'w':
+                            cell.setType(CellType.FLOOR);
+                            new Web(cell);
                             break;
 
                         default:
