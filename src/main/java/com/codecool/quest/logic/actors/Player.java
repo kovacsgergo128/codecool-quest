@@ -67,4 +67,8 @@ public class Player extends Actor {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
 }

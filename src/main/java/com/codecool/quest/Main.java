@@ -2,6 +2,7 @@ package com.codecool.quest;
 
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.GameMap;
+import com.codecool.quest.logic.Inventory;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
 import com.codecool.quest.logic.actors.Actor;
@@ -135,7 +136,9 @@ public class Main extends Application {
     private void refresh() {
         aiMove();
         if (!map.getPlayer().isAlive()){
-            map = MapLoader.loadMap("/map.txt");
+            this.level1 = MapLoader.loadMap("/map.txt");
+            this.level2 = MapLoader.loadMap("/map2.txt");
+            map = level1;
             map.getPlayer().setHealth(10);
             return;
         }
@@ -182,13 +185,21 @@ public class Main extends Application {
 
     private void changeLevel(Cell nextCell) {
         if (nextCell.getStairs() != null) {
+            int health = map.getPlayer().getHealth();
+            Inventory inventory = map.getPlayer().getInventory();
             String level = nextCell.getStairs().getLevel();
             switch (level) {
             case "level1":
-                this.map = level1;
+                this.level2 = this.map;
+                this.map = this.level1;
+                this.map.getPlayer().setHealth(health);
+                this.map.getPlayer().setInventory(inventory);
                 break;
             case "level2":
-                this.map = level2;
+                this.level1 = this.map;
+                this.map = this.level2;
+                this.map.getPlayer().setHealth(health);
+                this.map.getPlayer().setInventory(inventory);
                 break;
             default:
                 throw new RuntimeException("Unrecognized level: '" + level);
