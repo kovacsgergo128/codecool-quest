@@ -33,6 +33,9 @@ public class Player extends Actor {
             nextCell.getDoor().openDoor();
         } else if (nextCell.getDecor() != null && (nextCell.getDecor().getTileName().equals("bonfire") || nextCell.getDecor().getTileName().equals("spikes"))) {
             this.setHealth(this.getHealth() - 2);
+        } else if (nextCell != null && nextCell.getItem() != null && nextCell.getItem().getTileName().equals("riches")) {
+            this.inventory.addItem(nextCell.getItem());
+            nextCell.setItem(null);
         }
         super.move(dx, dy);
     }
