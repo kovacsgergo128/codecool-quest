@@ -5,8 +5,7 @@ import com.codecool.quest.logic.Items.Key;
 import com.codecool.quest.logic.Items.Sword;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
-import com.codecool.quest.logic.decoration.Skull;
-import com.codecool.quest.logic.decoration.Web;
+import com.codecool.quest.logic.decorations.*;
 import com.codecool.quest.logic.interactable.Door;
 
 import java.io.InputStream;
@@ -61,9 +60,17 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new TurkeyLeg(cell);
                             break;
-                        case 'b':
+                        case 'x':
                             cell.setType(CellType.FLOOR);
                             new Skull(cell);
+                            break;
+                        case 'b':
+                            cell.setType(CellType.FLOOR);
+                            new Bonfire(cell);
+                            break;
+                        case 't':
+                            cell.setType(CellType.FLOOR);
+                            new Spikes(cell);
                             break;
                         case 'w':
                             cell.setType(CellType.FLOOR);
