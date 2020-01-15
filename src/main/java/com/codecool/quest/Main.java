@@ -6,6 +6,7 @@ import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
+import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -132,6 +133,9 @@ public class Main extends Application {
     private void refresh() {
 
         aiMove();
+        if (!map.getPlayer().isAlive()){
+            map = MapLoader.loadMap("/map.txt");
+        }
 
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
