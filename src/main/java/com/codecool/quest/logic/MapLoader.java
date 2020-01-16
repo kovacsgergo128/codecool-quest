@@ -1,9 +1,6 @@
 package com.codecool.quest.logic;
 
-import com.codecool.quest.logic.Items.Key;
-import com.codecool.quest.logic.Items.Riches;
-import com.codecool.quest.logic.Items.Sword;
-import com.codecool.quest.logic.Items.TurkeyLeg;
+import com.codecool.quest.logic.Items.*;
 import com.codecool.quest.logic.actors.Boss;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
@@ -101,6 +98,10 @@ public class MapLoader {
                         case 'r':
                             cell.setType(CellType.FLOOR);
                             new Riches(cell);
+                            break;
+                        case 'c':
+                            cell.setType(CellType.FLOOR);
+                            new Crown(cell);
                             break;
 
                         default:
