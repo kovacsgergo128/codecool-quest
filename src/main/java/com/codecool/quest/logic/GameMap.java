@@ -1,9 +1,9 @@
 package com.codecool.quest.logic;
 
-import com.codecool.quest.logic.Items.Key;
 import com.codecool.quest.logic.actors.Player;
 
 public class GameMap {
+    private int currentLevel;
     private int width;
     private int height;
     private Cell[][] cells;
@@ -41,4 +41,11 @@ public class GameMap {
         return height;
     }
 
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public void setCurrentLevel(int level) {
+        this.currentLevel = level;
+    }
 }

@@ -23,11 +23,13 @@ public class MapLoader {
 
         scanner.nextLine(); // empty line
 
-        String level = scanner.next();
-        String level2 = scanner.next();
+        int previousLevel = scanner.nextInt();
+        int currentLevel = scanner.nextInt();
+        int nextLevel = scanner.nextInt();
         scanner.nextLine(); // empty line
 
         GameMap map = new GameMap(width, height, CellType.EMPTY);
+        map.setCurrentLevel(currentLevel);
         for (int y = 0; y < height; y++) {
             String line = scanner.nextLine();
             for (int x = 0; x < width; x++) {
@@ -65,11 +67,11 @@ public class MapLoader {
                             break;
                         case 'd':
                             cell.setType(CellType.FLOOR);
-                            new Stairs(cell, "level2", "stairs_down");
+                            new Stairs(cell, nextLevel, "stairs_down");
                             break;
                         case 'u':
                             cell.setType(CellType.FLOOR);
-                            new Stairs(cell, "level1", "stairs_up");
+                            new Stairs(cell, previousLevel, "stairs_up");
                             break;
                         case 'l':
                             cell.setType(CellType.FLOOR);
