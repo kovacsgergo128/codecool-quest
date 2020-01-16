@@ -64,19 +64,24 @@ public class Main extends Application {
         pickButton.setDisable(true);
 
         ui.add(inventory,0,3, 2, 1);
-        inventory.setOnKeyPressed(this::onKeyPressed);
+        // inventory.setOnKeyPressed(this::onKeyPressed);
+        inventory.setFocusTraversable(false);
 
         ui.add(nameInput, 0, 7);
-        nameInput.setOnKeyPressed(this::onKeyPressed);
+        // nameInput.setOnKeyPressed(this::onKeyPressed);
         ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(value ->  {
             map.getPlayer().setName(nameInput.getText());
-            ui.requestFocus();
+            // ui.requestFocus();
+            canvas.requestFocus();
+            nameInput.clear();
+            nameInput.setFocusTraversable(false);
             refresh();
         });
-        setNameButton.setOnKeyPressed(this::onKeyPressed);
+        //setNameButton.setOnKeyPressed(this::onKeyPressed);
         ui.add(playerNameLabel, 0, 9);
-
+        nameInput.setFocusTraversable(false);
+        setNameButton.setFocusTraversable(false);
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
@@ -87,6 +92,7 @@ public class Main extends Application {
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
         pickButton.setOnAction(this::onPickButtonClick);
+        pickButton.setFocusTraversable(false);
 
         primaryStage.setTitle("Codecool Quest");
         primaryStage.show();
