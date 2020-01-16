@@ -53,20 +53,22 @@ public class Main extends Application {
         ui.setPadding(new Insets(10));
         ui.setVgap(10);
 
-        ui.add(new Label("Health: "), 0, 0);
-        ui.add(healthLabel, 1, 0);
-        ui.add(new Label("Inventory:"), 0, 2);
+        ui.add(new Label("Health: "), 0, 1);
+        ui.add(healthLabel, 1, 1);
+        ui.add(new Label("Inventory:"), 0, 3);
         ui.add(pickButton, 0, 6, 2, 1);
 
         pickButton.setDisable(true);
 
-        ui.add(inventory, 0, 3, 2, 1);
+        ui.add(inventory, 0, 4, 2, 1);
         inventory.setFocusTraversable(false);
 
-        ui.add(nameInput, 0, 7);
-        ui.add(setNameButton, 0, 8);
+        nameInput.setPrefWidth(120);
+        ui.add(nameInput, 0, 8);
+        ui.add(setNameButton, 0, 9);
         setNameButton.setOnAction(this::onSetNameButtonClick);
-        ui.add(playerNameLabel, 0, 9);
+        ui.add(new Label("Name: "), 0, 0);
+        ui.add(playerNameLabel, 1, 0);
         nameInput.setFocusTraversable(false);
         setNameButton.setFocusTraversable(false);
         BorderPane borderPane = new BorderPane();
@@ -92,7 +94,6 @@ public class Main extends Application {
 
         canvas.requestFocus();
         nameInput.clear();
-        // nameInput.setFocusTraversable(false);
         refresh();
     }
 
@@ -209,7 +210,7 @@ public class Main extends Application {
             }
             targetCellX++;
         }
-        playerNameLabel.setText("Name: " + map.getPlayer().getName());
+        playerNameLabel.setText(map.getPlayer().getName());
         inventory.getItems().clear();
         for (Items item : map.getPlayer().getInventory().getItems()) {
             inventory.getItems().add(item.getTileName());
