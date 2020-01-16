@@ -1,6 +1,7 @@
 package com.codecool.quest;
 
 import com.codecool.quest.logic.Cell;
+import com.codecool.quest.logic.CellType;
 import com.codecool.quest.logic.GameMap;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
@@ -141,24 +142,41 @@ public class Main extends Application {
 
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+
+        int charX = map.getPlayer().getX();
+        int charY = map.getPlayer().getY();
+
+        int tCellX = 0;
+        int xOffset = 12;
+        int yOffset = 10;
+        for (int x = charX - xOffset - 1; x < charX + xOffset; x++) {
+            int tCellY = 0;
+            for (int y = charY - yOffset; y < charY + yOffset; y++) {
+                if (x >= map.getWidth()  || x < 0 ||
+                        y >= map.getHeight()  || y < 0
+                ){
+                    Tiles.drawTile(context, new Cell(0,0, CellType.EMPTY), tCellX, tCellY);
+                    tCellY++;
+                    continue;
+                }
                 Cell cell = map.getCell(x, y);
                 if (cell.getActor() != null && !cell.getActor().isAlive()){
                     cell.removeActor();
                 }
                 if (cell.getActor() != null && cell.getActor().isAlive()) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
+                    Tiles.drawTile(context, cell.getActor(), tCellX, tCellY);
                 } else if (cell.getItem() != null) {
-                    Tiles.drawTile(context, cell.getItem(), x, y);
+                    Tiles.drawTile(context, cell.getItem(), tCellX, tCellY);
                 } else if (cell.getDoor() != null) {
-                    Tiles.drawTile(context, cell.getDoor(), x, y);
+                    Tiles.drawTile(context, cell.getDoor(), tCellX, tCellY);
                 } else if (cell.getDecor() != null) {
-                    Tiles.drawTile(context, cell.getDecor(), x, y);
+                    Tiles.drawTile(context, cell.getDecor(), tCellX, tCellY);
                 } else {
-                    Tiles.drawTile(context, cell, x, y);
+                    Tiles.drawTile(context, cell, tCellX, tCellY);
                 }
+                tCellY++;
             }
+            tCellX++;
         }
         playerNameLabel.setText("Name: " + map.getPlayer().getName());
         inventory.getItems().clear();
