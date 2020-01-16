@@ -1,10 +1,7 @@
 package com.codecool.quest;
 
-import com.codecool.quest.logic.Cell;
-import com.codecool.quest.logic.GameMap;
-import com.codecool.quest.logic.Inventory;
+import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
-import com.codecool.quest.logic.MapLoader;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
 import javafx.application.Application;
@@ -64,21 +61,18 @@ public class Main extends Application {
         pickButton.setDisable(true);
 
         ui.add(inventory, 0, 3, 2, 1);
-        // inventory.setOnKeyPressed(this::onKeyPressed);
         inventory.setFocusTraversable(false);
 
         ui.add(nameInput, 0, 7);
-        // nameInput.setOnKeyPressed(this::onKeyPressed);
+        nameInput.setOnKeyPressed(this::onKeyPressed);
         ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(value -> {
             map.getPlayer().setName(nameInput.getText());
-            // ui.requestFocus();
             canvas.requestFocus();
             nameInput.clear();
             nameInput.setFocusTraversable(false);
             refresh();
         });
-        //setNameButton.setOnKeyPressed(this::onKeyPressed);
         ui.add(playerNameLabel, 0, 9);
         nameInput.setFocusTraversable(false);
         setNameButton.setFocusTraversable(false);
@@ -143,6 +137,16 @@ public class Main extends Application {
     }
 
     private void refresh() {
+        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        int east, west, north, south;
+        int charX = map.getPlayer().getX();
+        int charY = map.getPlayer().getY();
+        int width = map.getWidth();
+        int height = map.getHeight();
+        int targetCellX = 0;
+        int xOffset = 12;
+        int yOffset = 10;
+
         aiMove();
         if (!map.getPlayer().isAlive()) {
             loadMaps();
@@ -152,27 +156,50 @@ public class Main extends Application {
         }
 
         context.setFill(Color.BLACK);
-        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+
+        if (height > 20 || width > 25) {
+            north = charY - yOffset;
+            west = charX - xOffset - 1;
+            south = charY + yOffset;
+            east = charX + xOffset + 1;
+        } else {
+            north = 0;
+            west = 0;
+            south = height;
+            east = width;
+        }
+
+        for (int x = west; x < east; x++) {
+            int targetCellY = 0;
+            for (int y = north; y < south; y++) {
+
+                if (x >= width || x < 0 ||
+                        y >= height || y < 0
+                ) {
+                    Tiles.drawTile(context, new Cell(0, 0, CellType.EMPTY), targetCellX, targetCellY);
+                    targetCellY++;
+                    continue;
+                }
                 Cell cell = map.getCell(x, y);
                 if (cell.getActor() != null && !cell.getActor().isAlive()) {
                     cell.removeActor();
                 }
                 if (cell.getActor() != null && cell.getActor().isAlive()) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
+                    Tiles.drawTile(context, cell.getActor(), targetCellX, targetCellY);
                 } else if (cell.getItem() != null) {
-                    Tiles.drawTile(context, cell.getItem(), x, y);
+                    Tiles.drawTile(context, cell.getItem(), targetCellX, targetCellY);
                 } else if (cell.getDoor() != null) {
-                    Tiles.drawTile(context, cell.getDoor(), x, y);
+                    Tiles.drawTile(context, cell.getDoor(), targetCellX, targetCellY);
                 } else if (cell.getStairs() != null) {
-                    Tiles.drawTile(context, cell.getStairs(), x, y);
+                    Tiles.drawTile(context, cell.getStairs(), targetCellX, targetCellY);
                 } else if (cell.getDecor() != null) {
-                    Tiles.drawTile(context, cell.getDecor(), x, y);
+                    Tiles.drawTile(context, cell.getDecor(), targetCellX, targetCellY);
                 } else {
-                    Tiles.drawTile(context, cell, x, y);
+                    Tiles.drawTile(context, cell, targetCellX, targetCellY);
                 }
+                targetCellY++;
             }
+            targetCellX++;
         }
         playerNameLabel.setText("Name: " + map.getPlayer().getName());
         inventory.getItems().clear();
