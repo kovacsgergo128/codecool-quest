@@ -225,18 +225,11 @@ public class Main extends Application {
 
     private void changeLevel(Cell nextCell) {
         if (nextCell != null && nextCell.getStairs() != null) {
-            int health = map.getPlayer().getHealth();
-            String playerName = map.getPlayer().getName();
-            Inventory inventory = map.getPlayer().getInventory();
-            boolean isGod = map.getPlayer().getGod();
-            System.out.println(isGod);
+            Object[] playerAttributes = this.map.getPlayer().getAttributesForLevelChange();
             int levelTo = nextCell.getStairs().getLevel();
             this.levels[map.getCurrentLevel()] = this.map;
             this.map = this.levels[levelTo];
-            this.map.getPlayer().setHealth(health);
-            this.map.getPlayer().setInventory(inventory);
-            this.map.getPlayer().setName(playerName);
-            this.map.getPlayer().setGod(isGod);
+            this.map.getPlayer().setAttributesOnNewLevel(playerAttributes);
             refresh();
         }
     }

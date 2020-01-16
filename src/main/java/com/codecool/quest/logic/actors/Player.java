@@ -88,8 +88,21 @@ public class Player extends Actor {
     public void setGod(boolean god) {
         this.god = god;
     }
-
     public boolean getGod() {
         return this.god;
+    }
+    public Object[] getAttributesForLevelChange() {
+        return new Object[]{
+                this.getName(),
+                this.getHealth(),
+                this.getInventory(),
+                this.getGod()
+        };
+    }
+    public void setAttributesOnNewLevel(Object[] attributes) {
+        this.setName((String) attributes[0]);
+        this.setHealth((int) attributes[1]);
+        this.setInventory((Inventory) attributes[2]);
+        this.setGod((boolean) attributes[3]);
     }
 }
