@@ -85,10 +85,14 @@ public class Main extends Application {
         primaryStage.show();
     }
     private void onSetNameButtonClick(ActionEvent actionEvent) {
-        map.getPlayer().setName(nameInput.getText());
+        String input = nameInput.getText();
+        map.getPlayer().setName(input);
+        if (input.equals("iddqd"))
+            map.getPlayer().setGod(true);
+
         canvas.requestFocus();
         nameInput.clear();
-        nameInput.setFocusTraversable(false);
+        // nameInput.setFocusTraversable(false);
         refresh();
     }
 

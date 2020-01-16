@@ -41,13 +41,11 @@ public class Player extends Actor {
             nextCell.getDoor().openDoor();
         } else if (nextCell != null &&
                 nextCell.getDecor() != null &&
+                !this.god &&
                 (nextCell.getDecor().getTileName().equals("bonfire") ||
                         nextCell.getDecor().getTileName().equals("spikes"))) {
             this.setHealth(this.getHealth() - 2);
         }
-        if (name.equals("iddqd"))
-            this.god = true;
-
         if (name.equals("Max")) {
             if (nextCell != null) { // if the next cell is unoccupied
                 cell.setActor(null);
