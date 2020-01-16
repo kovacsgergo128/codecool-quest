@@ -9,6 +9,7 @@ import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
 import com.codecool.quest.logic.decorations.*;
 import com.codecool.quest.logic.interactable.Door;
+import com.codecool.quest.logic.interactable.Stairs;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -59,6 +60,14 @@ public class MapLoader {
                             new Sword(cell);
                             break;
                         case 'd':
+                            cell.setType(CellType.FLOOR);
+                            new Stairs(cell, "level2", "stairs_down");
+                            break;
+                        case 'u':
+                            cell.setType(CellType.FLOOR);
+                            new Stairs(cell, "level1", "stairs_up");
+                            break;
+                        case 'l':
                             cell.setType(CellType.FLOOR);
                             new TurkeyLeg(cell);
                             break;
