@@ -29,7 +29,7 @@ public class Player extends Actor {
     @Override
     public Cell move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if (nextCell.getActor() instanceof Npc) {
+        if (nextCell != null && nextCell.getActor() instanceof Npc) {
             attack(nextCell.getActor());
             return nextCell;
         }
