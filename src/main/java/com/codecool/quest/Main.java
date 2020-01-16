@@ -189,7 +189,7 @@ public class Main extends Application {
     }
 
     private void changeLevel(Cell nextCell) {
-        if (nextCell.getStairs() != null) {
+        if (nextCell != null && nextCell.getStairs() != null) {
             int health = map.getPlayer().getHealth();
             String playerName = map.getPlayer().getName();
             Inventory inventory = map.getPlayer().getInventory();
