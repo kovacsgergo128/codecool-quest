@@ -64,7 +64,6 @@ public class Main extends Application {
         inventory.setFocusTraversable(false);
 
         ui.add(nameInput, 0, 7);
-        nameInput.setOnKeyPressed(this::onKeyPressed);
         ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(value -> {
             map.getPlayer().setName(nameInput.getText());
