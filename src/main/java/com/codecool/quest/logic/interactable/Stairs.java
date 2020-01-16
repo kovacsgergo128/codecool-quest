@@ -6,10 +6,10 @@ import com.codecool.quest.logic.Drawable;
 public class Stairs implements Drawable {
     private Cell cell;
     private String tileName;
-    private String toLevel;
+    private int toLevel;
 
 
-    public Stairs(Cell cell, String level, String tileName) {
+    public Stairs(Cell cell, int level, String tileName) {
         this.cell = cell;
         this.toLevel = level;
         this.tileName = tileName;
@@ -21,7 +21,7 @@ public class Stairs implements Drawable {
         return this.tileName;
     }
 
-    public String getLevel() {
+    public int getLevel() {
         return this.toLevel;
     }
 }
