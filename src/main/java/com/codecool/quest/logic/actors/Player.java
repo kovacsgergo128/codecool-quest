@@ -6,6 +6,7 @@ import com.codecool.quest.logic.Inventory;
 public class Player extends Actor {
     private String name = "Player";
     Inventory inventory = new Inventory();
+    private boolean god = false;
 
     public Player(Cell cell) {
         super(cell);
@@ -33,17 +34,20 @@ public class Player extends Actor {
             return nextCell;
         }
         if (nextCell != null &&
-            nextCell.getDoor() != null &&
-            nextCell.getDoor().isLocked() &&
-            this.inventory.contains("key")) {
-                this.inventory.removeItemByItemName("key");
-                nextCell.getDoor().openDoor();
+                nextCell.getDoor() != null &&
+                nextCell.getDoor().isLocked() &&
+                this.inventory.contains("key")) {
+            this.inventory.removeItemByItemName("key");
+            nextCell.getDoor().openDoor();
         } else if (nextCell != null &&
-                   nextCell.getDecor() != null &&
-                  (nextCell.getDecor().getTileName().equals("bonfire") ||
-                   nextCell.getDecor().getTileName().equals("spikes"))) {
+                nextCell.getDecor() != null &&
+                (nextCell.getDecor().getTileName().equals("bonfire") ||
+                        nextCell.getDecor().getTileName().equals("spikes"))) {
             this.setHealth(this.getHealth() - 2);
         }
+        if (name.equals("iddqd"))
+            this.god = true;
+
         if (name.equals("Max")) {
             if (nextCell != null) { // if the next cell is unoccupied
                 cell.setActor(null);
@@ -60,10 +64,14 @@ public class Player extends Actor {
 
     @Override
     public void attack(Actor enemy) {
-//        enemy.attack(this);
         enemy.changeHealth(this.inventory.contains("sword") ? -10 : -5);
     }
 
+    @Override
+    public void changeHealth(int hp) {
+        if (hp < 0 && god)  return;
+        super.changeHealth(hp);
+    }
 
     public String getName() {
         return name;
