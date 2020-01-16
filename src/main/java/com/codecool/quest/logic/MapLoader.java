@@ -26,11 +26,13 @@ public class MapLoader {
 
         scanner.nextLine(); // empty line
 
-        String previousLevel = scanner.next();
-        String nextLevel = scanner.next();
+        int previousLevel = scanner.nextInt();
+        int currentLevel = scanner.nextInt();
+        int nextLevel = scanner.nextInt();
         scanner.nextLine(); // empty line
 
         GameMap map = new GameMap(width, height, CellType.EMPTY);
+        map.setCurrentLevel(currentLevel);
         for (int y = 0; y < height; y++) {
             String line = scanner.nextLine();
             for (int x = 0; x < width; x++) {

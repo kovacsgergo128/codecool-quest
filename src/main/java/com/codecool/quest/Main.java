@@ -26,13 +26,11 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class Main extends Application {
-    GameMap level1 = MapLoader.loadMap("/map.txt");
-    GameMap level2 = MapLoader.loadMap("/map2.txt");
-    GameMap map = level1;
-    Canvas canvas = new Canvas(
-            map.getWidth() * Tiles.TILE_WIDTH,
-            map.getHeight() * Tiles.TILE_WIDTH);
-    GraphicsContext context = canvas.getGraphicsContext2D();
+    String[] sourceFiles = {"/map.txt", "/map2.txt"};
+    GameMap[] levels = new GameMap[sourceFiles.length];
+    GameMap map;
+    Canvas canvas;
+    GraphicsContext context;
     Label healthLabel = new Label();
     ListView<String> inventory = new ListView<>();
     Button pickButton = new Button("Pick up");
@@ -46,6 +44,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        this.loadMaps();
+        map = levels[0];
+        canvas = new Canvas(
+                map.getWidth() * Tiles.TILE_WIDTH,
+                map.getHeight() * Tiles.TILE_WIDTH);
+        context = canvas.getGraphicsContext2D();
+
         GridPane ui = new GridPane();
         ui.setPrefWidth(210);
         ui.setPadding(new Insets(10));
@@ -58,14 +63,14 @@ public class Main extends Application {
 
         pickButton.setDisable(true);
 
-        ui.add(inventory,0,3, 2, 1);
+        ui.add(inventory, 0, 3, 2, 1);
         // inventory.setOnKeyPressed(this::onKeyPressed);
         inventory.setFocusTraversable(false);
 
         ui.add(nameInput, 0, 7);
         // nameInput.setOnKeyPressed(this::onKeyPressed);
         ui.add(setNameButton, 0, 8);
-        setNameButton.setOnAction(value ->  {
+        setNameButton.setOnAction(value -> {
             map.getPlayer().setName(nameInput.getText());
             // ui.requestFocus();
             canvas.requestFocus();
@@ -139,10 +144,9 @@ public class Main extends Application {
 
     private void refresh() {
         aiMove();
-        if (!map.getPlayer().isAlive()){
-            this.level1 = MapLoader.loadMap("/map.txt");
-            this.level2 = MapLoader.loadMap("/map2.txt");
-            map = level1;
+        if (!map.getPlayer().isAlive()) {
+            loadMaps();
+            map = levels[0];
             map.getPlayer().setHealth(10);
             return;
         }
@@ -152,7 +156,7 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
-                if (cell.getActor() != null && !cell.getActor().isAlive()){
+                if (cell.getActor() != null && !cell.getActor().isAlive()) {
                     cell.removeActor();
                 }
                 if (cell.getActor() != null && cell.getActor().isAlive()) {
@@ -193,27 +197,14 @@ public class Main extends Application {
             int health = map.getPlayer().getHealth();
             String playerName = map.getPlayer().getName();
             Inventory inventory = map.getPlayer().getInventory();
-            String level = nextCell.getStairs().getLevel();
-            switch (level) {
-            case "level1":
-                this.level2 = this.map;
-                this.map = this.level1;
-                this.map.getPlayer().setHealth(health);
-                this.map.getPlayer().setInventory(inventory);
-                this.map.getPlayer().setName(playerName);
-                break;
-            case "level2":
-                this.level1 = this.map;
-                this.map = this.level2;
-                this.map.getPlayer().setHealth(health);
-                this.map.getPlayer().setInventory(inventory);
-                this.map.getPlayer().setName(playerName);
-                break;
-            default:
-                throw new RuntimeException("Unrecognized level: '" + level);
-            }
-            refresh();
+            int levelTo = nextCell.getStairs().getLevel();
+            this.levels[map.getCurrentLevel()] = this.map;
+            this.map = this.levels[levelTo];
+            this.map.getPlayer().setHealth(health);
+            this.map.getPlayer().setInventory(inventory);
+            this.map.getPlayer().setName(playerName);
         }
+        refresh();
     }
 
     private void aiMove() {
@@ -221,14 +212,19 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
-                if (cell.getActor() instanceof Npc && cell.getActor().isAlive()){
+                if (cell.getActor() instanceof Npc && cell.getActor().isAlive()) {
                     actors.add(cell.getActor());
                 }
             }
         }
-        for (Actor actor : actors){
+        for (Actor actor : actors) {
             actor.moveAi();
         }
     }
 
+    public void loadMaps() {
+        for (int i = 0; i < sourceFiles.length; i++) {
+            levels[i] = MapLoader.loadMap(sourceFiles[i]);
+        }
+    }
 }
