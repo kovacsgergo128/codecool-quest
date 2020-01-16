@@ -84,4 +84,12 @@ public class Player extends Actor {
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
+
+    public void setGod(boolean god) {
+        this.god = god;
+    }
+
+    public boolean getGod() {
+        return this.god;
+    }
 }

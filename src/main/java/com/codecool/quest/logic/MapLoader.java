@@ -97,7 +97,7 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new Boss(cell);
                             break;
-                        case 'r':
+                        case 'g':
                             cell.setType(CellType.FLOOR);
                             new Gold(cell);
                             break;
