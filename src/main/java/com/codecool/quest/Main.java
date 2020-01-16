@@ -138,11 +138,12 @@ public class Main extends Application {
             map.getPlayer().setHealth(10);
             return;
         }
-
+        int asd = map.getPlayer().getX();
+        int qwe = map.getPlayer().getY();
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = asd - 5; x < asd +5; x++) {
+            for (int y = qwe-5> 0 ?qwe - 5:0; y < ((qwe+5<map.getHeight())?qwe + 5:map.getHeight()); y++) {
                 Cell cell = map.getCell(x, y);
                 if (cell.getActor() != null && !cell.getActor().isAlive()){
                     cell.removeActor();
