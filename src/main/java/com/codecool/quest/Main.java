@@ -203,8 +203,8 @@ public class Main extends Application {
             this.map.getPlayer().setHealth(health);
             this.map.getPlayer().setInventory(inventory);
             this.map.getPlayer().setName(playerName);
+            refresh();
         }
-        refresh();
     }
 
     private void aiMove() {
