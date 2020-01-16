@@ -74,7 +74,7 @@ public class Cell implements Drawable {
         return y;
     }
 
-    public boolean isValidMove(int dirX, int dirY) {
+    private boolean isValidMove(int dirX, int dirY) {
         return !(this.getX() + dirX < 0 || this.getX() + dirX >= this.gameMap.getWidth() || this.getY() + dirY < 0 || this.getY() + dirY >= this.gameMap.getHeight());
     }
 
