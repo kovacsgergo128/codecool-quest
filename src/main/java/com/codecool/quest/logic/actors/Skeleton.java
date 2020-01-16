@@ -27,11 +27,11 @@ public class Skeleton extends Npc {
         ArrayList<int[]> validMoves = new ArrayList<>();
         for (int[] direction : directions) {
             Cell neighbor = cell.getNeighbor(direction[X], direction[Y]);
-            if (neighbor.getActor() instanceof Player){
+            if (neighbor != null && neighbor.getActor() instanceof Player){
                 this.attack(neighbor.getActor());
                 return;
             }
-            if (neighbor.isValidDest() && neighbor.isValidMove(direction[X], direction[Y])) {
+            if (neighbor != null && neighbor.isValidDest()) {
                 validMoves.add(direction);
             }
         }

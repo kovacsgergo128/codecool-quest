@@ -1,14 +1,18 @@
 package com.codecool.quest.logic;
 
-import com.codecool.quest.logic.Items.Riches;
-import com.codecool.quest.logic.Items.TurkeyLeg;
 import com.codecool.quest.logic.Items.Key;
+import com.codecool.quest.logic.Items.Riches;
 import com.codecool.quest.logic.Items.Sword;
+import com.codecool.quest.logic.Items.TurkeyLeg;
 import com.codecool.quest.logic.actors.Boss;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
-import com.codecool.quest.logic.decorations.*;
+import com.codecool.quest.logic.decorations.Bonfire;
+import com.codecool.quest.logic.decorations.Skull;
+import com.codecool.quest.logic.decorations.Spikes;
+import com.codecool.quest.logic.decorations.Web;
 import com.codecool.quest.logic.interactable.Door;
+import com.codecool.quest.logic.interactable.Stairs;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -20,6 +24,10 @@ public class MapLoader {
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
+        scanner.nextLine(); // empty line
+
+        String level = scanner.next();
+        String level2 = scanner.next();
         scanner.nextLine(); // empty line
 
         GameMap map = new GameMap(width, height, CellType.EMPTY);
@@ -59,6 +67,14 @@ public class MapLoader {
                             new Sword(cell);
                             break;
                         case 'd':
+                            cell.setType(CellType.FLOOR);
+                            new Stairs(cell, "level2", "stairs_down");
+                            break;
+                        case 'u':
+                            cell.setType(CellType.FLOOR);
+                            new Stairs(cell, "level1", "stairs_up");
+                            break;
+                        case 'l':
                             cell.setType(CellType.FLOOR);
                             new TurkeyLeg(cell);
                             break;

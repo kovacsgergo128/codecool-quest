@@ -3,12 +3,11 @@ package com.codecool.quest;
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.CellType;
 import com.codecool.quest.logic.GameMap;
+import com.codecool.quest.logic.Inventory;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.MapLoader;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
-import com.codecool.quest.logic.actors.Player;
-import com.codecool.quest.logic.actors.Skeleton;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -17,17 +16,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-
-import java.awt.*;
 
 import java.util.ArrayList;
 
@@ -65,19 +60,21 @@ public class Main extends Application {
         pickButton.setDisable(true);
 
         ui.add(inventory, 0, 3, 2, 1);
-        inventory.setOnKeyPressed(this::onKeyPressed);
+        inventory.setFocusTraversable(false);
 
         ui.add(nameInput, 0, 7);
         nameInput.setOnKeyPressed(this::onKeyPressed);
         ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(value -> {
             map.getPlayer().setName(nameInput.getText());
-            ui.requestFocus();
+            canvas.requestFocus();
+            nameInput.clear();
+            nameInput.setFocusTraversable(false);
             refresh();
         });
-        setNameButton.setOnKeyPressed(this::onKeyPressed);
         ui.add(playerNameLabel, 0, 9);
-
+        nameInput.setFocusTraversable(false);
+        setNameButton.setFocusTraversable(false);
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
@@ -88,6 +85,7 @@ public class Main extends Application {
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
         pickButton.setOnAction(this::onPickButtonClick);
+        pickButton.setFocusTraversable(false);
 
         primaryStage.setTitle("Codecool Quest");
         primaryStage.show();
@@ -99,21 +97,26 @@ public class Main extends Application {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
+        Cell nextCell;
         switch (keyEvent.getCode()) {
             case UP:
-                map.getPlayer().move(0, -1);
+                nextCell = map.getPlayer().move(0, -1);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case DOWN:
-                map.getPlayer().move(0, 1);
+                nextCell = map.getPlayer().move(0, 1);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case LEFT:
-                map.getPlayer().move(-1, 0);
+                nextCell = map.getPlayer().move(-1, 0);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case RIGHT:
-                map.getPlayer().move(1, 0);
+                nextCell = map.getPlayer().move(1, 0);
+                changeLevel(nextCell);
                 refresh();
                 break;
             case ENTER:
@@ -133,24 +136,27 @@ public class Main extends Application {
     }
 
     private void refresh() {
+        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        int east, west, north, south;
+        int charX = map.getPlayer().getX();
+        int charY = map.getPlayer().getY();
+        int width = map.getWidth();
+        int height = map.getHeight();
+        int targetCellX = 0;
+        int xOffset = 12;
+        int yOffset = 10;
+
         aiMove();
         if (!map.getPlayer().isAlive()) {
-            map = MapLoader.loadMap("/map.txt");
+            this.level1 = MapLoader.loadMap("/map.txt");
+            this.level2 = MapLoader.loadMap("/map2.txt");
+            map = level1;
             map.getPlayer().setHealth(10);
             return;
         }
 
         context.setFill(Color.BLACK);
-        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        int charX = map.getPlayer().getX();
-        int charY = map.getPlayer().getY();
-        int width = map.getWidth();
-        int height = map.getHeight();
-        int tCellX = 0;
-        int xOffset = 12;
-        int yOffset = 10;
-        int east, west, north, south;
         if (height > 20 || width > 25) {
             north = charY - yOffset;
             west = charX - xOffset - 1;
@@ -164,14 +170,14 @@ public class Main extends Application {
         }
 
         for (int x = west; x < east; x++) {
-            int tCellY = 0;
+            int targetCellY = 0;
             for (int y = north; y < south; y++) {
 
                 if (x >= width || x < 0 ||
                         y >= height || y < 0
                 ) {
-                    Tiles.drawTile(context, new Cell(0, 0, CellType.EMPTY), tCellX, tCellY);
-                    tCellY++;
+                    Tiles.drawTile(context, new Cell(0, 0, CellType.EMPTY), targetCellX, targetCellY);
+                    targetCellY++;
                     continue;
                 }
                 Cell cell = map.getCell(x, y);
@@ -179,19 +185,21 @@ public class Main extends Application {
                     cell.removeActor();
                 }
                 if (cell.getActor() != null && cell.getActor().isAlive()) {
-                    Tiles.drawTile(context, cell.getActor(), tCellX, tCellY);
+                    Tiles.drawTile(context, cell.getActor(), targetCellX, targetCellY);
                 } else if (cell.getItem() != null) {
-                    Tiles.drawTile(context, cell.getItem(), tCellX, tCellY);
+                    Tiles.drawTile(context, cell.getItem(), targetCellX, targetCellY);
                 } else if (cell.getDoor() != null) {
-                    Tiles.drawTile(context, cell.getDoor(), tCellX, tCellY);
+                    Tiles.drawTile(context, cell.getDoor(), targetCellX, targetCellY);
+                } else if (cell.getStairs() != null) {
+                    Tiles.drawTile(context, cell.getStairs(), targetCellX, targetCellY);
                 } else if (cell.getDecor() != null) {
-                    Tiles.drawTile(context, cell.getDecor(), tCellX, tCellY);
+                    Tiles.drawTile(context, cell.getDecor(), targetCellX, targetCellY);
                 } else {
-                    Tiles.drawTile(context, cell, tCellX, tCellY);
+                    Tiles.drawTile(context, cell, targetCellX, targetCellY);
                 }
-                tCellY++;
+                targetCellY++;
             }
-            tCellX++;
+            targetCellX++;
         }
         playerNameLabel.setText("Name: " + map.getPlayer().getName());
         inventory.getItems().clear();
@@ -207,6 +215,35 @@ public class Main extends Application {
         } else {
             pickButton.setDisable(true);
             pickButton.setText("Pick up");
+        }
+        canvas.requestFocus();
+    }
+
+    private void changeLevel(Cell nextCell) {
+        if (nextCell != null && nextCell.getStairs() != null) {
+            int health = map.getPlayer().getHealth();
+            String playerName = map.getPlayer().getName();
+            Inventory inventory = map.getPlayer().getInventory();
+            String level = nextCell.getStairs().getLevel();
+            switch (level) {
+                case "level1":
+                    this.level2 = this.map;
+                    this.map = this.level1;
+                    this.map.getPlayer().setHealth(health);
+                    this.map.getPlayer().setInventory(inventory);
+                    this.map.getPlayer().setName(playerName);
+                    break;
+                case "level2":
+                    this.level1 = this.map;
+                    this.map = this.level2;
+                    this.map.getPlayer().setHealth(health);
+                    this.map.getPlayer().setInventory(inventory);
+                    this.map.getPlayer().setName(playerName);
+                    break;
+                default:
+                    throw new RuntimeException("Unrecognized level: '" + level);
+            }
+            refresh();
         }
     }
 
