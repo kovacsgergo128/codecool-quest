@@ -64,13 +64,13 @@ public class Main extends Application {
 
         pickButton.setDisable(true);
 
-        ui.add(inventory,0,3, 2, 1);
+        ui.add(inventory, 0, 3, 2, 1);
         inventory.setOnKeyPressed(this::onKeyPressed);
 
         ui.add(nameInput, 0, 7);
         nameInput.setOnKeyPressed(this::onKeyPressed);
         ui.add(setNameButton, 0, 8);
-        setNameButton.setOnAction(value ->  {
+        setNameButton.setOnAction(value -> {
             map.getPlayer().setName(nameInput.getText());
             ui.requestFocus();
             refresh();
@@ -134,7 +134,7 @@ public class Main extends Application {
 
     private void refresh() {
         aiMove();
-        if (!map.getPlayer().isAlive()){
+        if (!map.getPlayer().isAlive()) {
             map = MapLoader.loadMap("/map.txt");
             map.getPlayer().setHealth(10);
             return;
@@ -145,22 +145,37 @@ public class Main extends Application {
 
         int charX = map.getPlayer().getX();
         int charY = map.getPlayer().getY();
-
+        int width = map.getWidth();
+        int height = map.getHeight();
         int tCellX = 0;
         int xOffset = 12;
         int yOffset = 10;
-        for (int x = charX - xOffset - 1; x < charX + xOffset; x++) {
+        int east, west, north, south;
+        if (height > 20 || width > 25) {
+            north = charY - yOffset;
+            west = charX - xOffset - 1;
+            south = charY + yOffset;
+            east = charX + xOffset + 1;
+        } else {
+            north = 0;
+            west = 0;
+            south = height;
+            east = width;
+        }
+
+        for (int x = west; x < east; x++) {
             int tCellY = 0;
-            for (int y = charY - yOffset; y < charY + yOffset; y++) {
-                if (x >= map.getWidth()  || x < 0 ||
-                        y >= map.getHeight()  || y < 0
-                ){
-                    Tiles.drawTile(context, new Cell(0,0, CellType.EMPTY), tCellX, tCellY);
+            for (int y = north; y < south; y++) {
+
+                if (x >= width || x < 0 ||
+                        y >= height || y < 0
+                ) {
+                    Tiles.drawTile(context, new Cell(0, 0, CellType.EMPTY), tCellX, tCellY);
                     tCellY++;
                     continue;
                 }
                 Cell cell = map.getCell(x, y);
-                if (cell.getActor() != null && !cell.getActor().isAlive()){
+                if (cell.getActor() != null && !cell.getActor().isAlive()) {
                     cell.removeActor();
                 }
                 if (cell.getActor() != null && cell.getActor().isAlive()) {
@@ -200,12 +215,12 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
-                if (cell.getActor() instanceof Npc && cell.getActor().isAlive()){
+                if (cell.getActor() instanceof Npc && cell.getActor().isAlive()) {
                     actors.add(cell.getActor());
                 }
             }
         }
-        for (Actor actor : actors){
+        for (Actor actor : actors) {
             actor.moveAi();
         }
     }
