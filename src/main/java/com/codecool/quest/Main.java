@@ -131,6 +131,10 @@ public class Main extends Application {
                     refresh();
                 }
                 break;
+            case ESCAPE:
+                nameInput.setFocusTraversable(true);
+                canvas.requestFocus();
+                nameInput.setFocusTraversable(false);
         }
     }
 
