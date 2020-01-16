@@ -65,13 +65,7 @@ public class Main extends Application {
 
         ui.add(nameInput, 0, 7);
         ui.add(setNameButton, 0, 8);
-        setNameButton.setOnAction(value -> {
-            map.getPlayer().setName(nameInput.getText());
-            canvas.requestFocus();
-            nameInput.clear();
-            nameInput.setFocusTraversable(false);
-            refresh();
-        });
+        setNameButton.setOnAction(this::onSetNameButtonClick);
         ui.add(playerNameLabel, 0, 9);
         nameInput.setFocusTraversable(false);
         setNameButton.setFocusTraversable(false);
@@ -89,6 +83,13 @@ public class Main extends Application {
 
         primaryStage.setTitle("Codecool Quest");
         primaryStage.show();
+    }
+    private void onSetNameButtonClick(ActionEvent actionEvent) {
+        map.getPlayer().setName(nameInput.getText());
+        canvas.requestFocus();
+        nameInput.clear();
+        nameInput.setFocusTraversable(false);
+        refresh();
     }
 
     private void onPickButtonClick(ActionEvent actionEvent) {
