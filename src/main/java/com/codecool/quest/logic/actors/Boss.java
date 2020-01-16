@@ -33,8 +33,14 @@ public class Boss extends Npc{
         ArrayList<int[]> validMoves = new ArrayList<>();
         for (int[] direction : directions) {
             Cell neighbor = cell.getNeighbor(direction[X], direction[Y]);
-            if (neighbor.getActor() instanceof Player) {
-                this.attack(neighbor.getActor());
+            Actor actor = neighbor.getActor();
+            if (actor instanceof Player) {
+                if (((Player) actor).getInventory().contains("riches")) {
+                    this.move(1,0);
+                    ((Player) actor).getInventory().removeItemByItemName("riches");
+                }else {
+                    this.attack(actor);
+                }
             }
         }
     }
