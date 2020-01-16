@@ -99,7 +99,7 @@ public class MapLoader {
                             break;
                         case 'r':
                             cell.setType(CellType.FLOOR);
-                            new Riches(cell);
+                            new Gold(cell);
                             break;
                         case 'c':
                             cell.setType(CellType.FLOOR);

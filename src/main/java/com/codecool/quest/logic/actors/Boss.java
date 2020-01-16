@@ -35,9 +35,9 @@ public class Boss extends Npc{
             Cell neighbor = cell.getNeighbor(direction[X], direction[Y]);
             Actor actor = neighbor.getActor();
             if (actor instanceof Player) {
-                if (((Player) actor).getInventory().contains("riches")) {
+                if (((Player) actor).getInventory().contains("gold")) {
                     this.move(1,0);
-                    ((Player) actor).getInventory().removeItemByItemName("riches");
+                    ((Player) actor).getInventory().removeItemByItemName("gold");
                 }else {
                     this.attack(actor);
                 }

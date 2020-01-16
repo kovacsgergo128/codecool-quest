@@ -38,7 +38,7 @@ public class Tiles {
         tileMap.put("skull", new Tile(0,15));
         tileMap.put("web", new Tile(2,15));
         tileMap.put("turkey leg", new Tile(17,28));
-        tileMap.put("riches", new Tile(9,26));
+        tileMap.put("gold", new Tile(9,26));
         tileMap.put("bonfire", new Tile(14, 10));
         tileMap.put("spikes", new Tile(22, 0));
         tileMap.put("boss", new Tile(24, 1));
