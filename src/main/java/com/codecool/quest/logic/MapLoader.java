@@ -4,10 +4,7 @@ import com.codecool.quest.logic.Items.*;
 import com.codecool.quest.logic.actors.Boss;
 import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
-import com.codecool.quest.logic.decorations.Bonfire;
-import com.codecool.quest.logic.decorations.Skull;
-import com.codecool.quest.logic.decorations.Spikes;
-import com.codecool.quest.logic.decorations.Web;
+import com.codecool.quest.logic.decorations.*;
 import com.codecool.quest.logic.interactable.Door;
 import com.codecool.quest.logic.interactable.Stairs;
 
@@ -104,6 +101,10 @@ public class MapLoader {
                         case 'c':
                             cell.setType(CellType.FLOOR);
                             new Crown(cell);
+                            break;
+                        case '+':
+                            cell.setType(CellType.WALL);
+                            new GraveStone(cell);
                             break;
 
                         default:

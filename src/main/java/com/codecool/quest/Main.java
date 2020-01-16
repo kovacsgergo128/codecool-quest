@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class Main extends Application {
-    String[] sourceFiles = {"/map.txt", "/map2.txt"};
+    String[] sourceFiles = {"/map.txt", "/map2.txt", "/map3.txt"};
     GameMap[] levels = new GameMap[sourceFiles.length];
     GameMap map;
     Canvas canvas;
