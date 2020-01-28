@@ -1,6 +1,6 @@
 package com.codecool.quest;
 
-public enum MapFiles {
+public enum MapFile {
     LEVEL1 (0, "/map.txt"),
     LEVEL2 (1, "/map2.txt"),
     LEVEL3 (2, "/map3.txt");
@@ -8,7 +8,7 @@ public enum MapFiles {
     private final int levelIndex;
     private final String levelMap;
 
-    MapFiles(int levelIndex, String levelMap) {
+    MapFile(int levelIndex, String levelMap) {
         this.levelIndex = levelIndex;
         this.levelMap = levelMap;
     }
