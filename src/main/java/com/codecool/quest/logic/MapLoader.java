@@ -12,17 +12,12 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class MapLoader {
-    public static GameMap loadMap(String levelMap) {
+    public static GameMap loadMap(String levelMap, int currentLevel) {
         InputStream is = MapLoader.class.getResourceAsStream(levelMap);
         Scanner scanner = new Scanner(is);
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
-        scanner.nextLine(); // empty line
-
-        int previousLevel = scanner.nextInt();
-        int currentLevel = scanner.nextInt();
-        int nextLevel = scanner.nextInt();
         scanner.nextLine(); // empty line
 
         GameMap map = new GameMap(width, height, CellType.EMPTY);
@@ -64,11 +59,11 @@ public class MapLoader {
                             break;
                         case 'd':
                             cell.setType(CellType.FLOOR);
-                            new Stairs(cell, nextLevel, "stairs_down");
+                            new Stairs(cell, currentLevel + 1, "stairs_down");
                             break;
                         case 'u':
                             cell.setType(CellType.FLOOR);
-                            new Stairs(cell, previousLevel, "stairs_up");
+                            new Stairs(cell, currentLevel - 1, "stairs_up");
                             break;
                         case 'l':
                             cell.setType(CellType.FLOOR);

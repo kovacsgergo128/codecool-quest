@@ -25,8 +25,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class Game {
-    String[] mapFiles = {"/map.txt", "/map2.txt", "/map3.txt"};
-    GameMap[] levels = new GameMap[mapFiles.length];
+    GameMap[] levels = new GameMap[MapFiles.values().length];
     GameMap map;
     Canvas canvas;
     GraphicsContext context;
@@ -252,8 +251,11 @@ public class Game {
     }
 
     public void loadLevels() {
-        for (int i = 0; i < mapFiles.length; i++) {
-            levels[i] = MapLoader.loadMap(mapFiles[i]);
+        int actualIndex = 0;
+        for (MapFiles level : MapFiles.values()) {
+            levels[actualIndex] = MapLoader.loadMap(level.getLevelMap(),level.getLevelIndex());
+            System.out.println(level.getLevelIndex());
+            actualIndex++;
         }
     }
 
