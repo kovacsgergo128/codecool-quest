@@ -1,6 +1,5 @@
 package com.codecool.quest.logic;
 
-import com.codecool.quest.Direction;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.decorations.Decor;

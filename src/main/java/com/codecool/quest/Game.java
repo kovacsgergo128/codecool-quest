@@ -1,10 +1,7 @@
 package com.codecool.quest;
 
-import com.codecool.quest.logic.Cell;
-import com.codecool.quest.logic.CellType;
-import com.codecool.quest.logic.GameMap;
+import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
-import com.codecool.quest.logic.MapLoader;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
 import javafx.event.ActionEvent;

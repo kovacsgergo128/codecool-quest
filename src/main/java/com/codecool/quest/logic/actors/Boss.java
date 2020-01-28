@@ -1,6 +1,6 @@
 package com.codecool.quest.logic.actors;
 
-import com.codecool.quest.Direction;
+import com.codecool.quest.logic.Direction;
 import com.codecool.quest.logic.Cell;
 
 import java.util.ArrayList;
