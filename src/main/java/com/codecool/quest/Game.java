@@ -102,22 +102,22 @@ public class Game {
         Cell nextCell;
         switch (keyEvent.getCode()) {
             case UP:
-                nextCell = map.getPlayer().move(0, -1);
+                nextCell = map.getPlayer().move(Direction.NORTH);
                 changeLevel(nextCell);
                 refresh();
                 break;
             case DOWN:
-                nextCell = map.getPlayer().move(0, 1);
+                nextCell = map.getPlayer().move(Direction.SOUTH);
                 changeLevel(nextCell);
                 refresh();
                 break;
             case LEFT:
-                nextCell = map.getPlayer().move(-1, 0);
+                nextCell = map.getPlayer().move(Direction.WEST);
                 changeLevel(nextCell);
                 refresh();
                 break;
             case RIGHT:
-                nextCell = map.getPlayer().move(1, 0);
+                nextCell = map.getPlayer().move(Direction.EAST);
                 changeLevel(nextCell);
                 refresh();
                 break;
@@ -149,6 +149,7 @@ public class Game {
         int width = map.getWidth();
         int height = map.getHeight();
         int targetCellX = 0;
+        int targetCellY;
         int xOffset = 12;
         int yOffset = 10;
 
@@ -175,7 +176,7 @@ public class Game {
         }
 
         for (int x = west; x < east; x++) {
-            int targetCellY = 0;
+            targetCellY = 0;
             for (int y = north; y < south; y++) {
 
                 if (x >= width || x < 0 ||

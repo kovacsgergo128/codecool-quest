@@ -1,5 +1,6 @@
 package com.codecool.quest.logic;
 
+import com.codecool.quest.Direction;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.decorations.Decor;
@@ -61,9 +62,9 @@ public class Cell implements Drawable {
         }
     }
 
-    public Cell getNeighbor(int dx, int dy) {
-        if (isValidMove(dx,dy)) {
-            return gameMap.getCell(x + dx, y + dy);
+    public Cell getNeighbor(Direction direction) {
+        if (isValidMove(direction)) {
+            return gameMap.getCell(x + direction.getDx(), y + direction.getDy());
         } else {
             return null;
         }
@@ -82,12 +83,22 @@ public class Cell implements Drawable {
         return y;
     }
 
-    private boolean isValidMove(int dirX, int dirY) {
-        return !(this.getX() + dirX < 0 || this.getX() + dirX >= this.gameMap.getWidth() || this.getY() + dirY < 0 || this.getY() + dirY >= this.gameMap.getHeight());
+    private boolean isValidMove(Direction direction) {
+        return !(
+                this.getX() + direction.getDx() < 0 ||
+                this.getX() + direction.getDx() >= this.gameMap.getWidth() ||
+                this.getY() + direction.getDy() < 0 ||
+                this.getY() + direction.getDy() >= this.gameMap.getHeight()
+        );
     }
 
     public boolean isValidDest() {
-        return !(this.type.equals(CellType.WALL) || this.type.equals(CellType.EMPTY) || !(getActor() == null) || (this.door != null && this.door.isLocked()));
+        return !(
+                this.type.equals(CellType.WALL) ||
+                this.type.equals(CellType.EMPTY) ||
+                !(getActor() == null) ||
+                (this.door != null && this.door.isLocked())
+        );
     }
 
     public Door getDoor() {

@@ -1,5 +1,6 @@
 package com.codecool.quest.logic.actors;
 
+import com.codecool.quest.Direction;
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.Drawable;
 
@@ -22,8 +23,8 @@ public abstract class Actor implements Drawable {
         this.cell.setActor(this);
     }
 
-    public Cell move(int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
+    public Cell move(Direction direction) {
+        Cell nextCell = cell.getNeighbor(direction);
         if (nextCell != null && nextCell.isValidDest()) { // if the next cell is unoccupied
             cell.setActor(null);
             nextCell.setActor(this);

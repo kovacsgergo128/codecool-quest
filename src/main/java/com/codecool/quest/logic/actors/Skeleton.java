@@ -1,5 +1,6 @@
 package com.codecool.quest.logic.actors;
 
+import com.codecool.quest.Direction;
 import com.codecool.quest.logic.Cell;
 
 import java.util.ArrayList;
@@ -17,16 +18,9 @@ public class Skeleton extends Npc {
 
     @Override
     public void moveAi(){
-        final int X = 0, Y = 1;
-        int[][] directions = {
-                {1, 0},
-                {0, 1},
-                {-1, 0},
-                {0, -1}
-        };
-        ArrayList<int[]> validMoves = new ArrayList<>();
-        for (int[] direction : directions) {
-            Cell neighbor = cell.getNeighbor(direction[X], direction[Y]);
+        ArrayList<Direction> validMoves = new ArrayList<>();
+        for (Direction direction : Direction.values()) {
+            Cell neighbor = cell.getNeighbor(direction);
             if (neighbor != null && neighbor.getActor() instanceof Player){
                 this.attack(neighbor.getActor());
                 return;
@@ -37,9 +31,10 @@ public class Skeleton extends Npc {
         }
         Random random = new Random();
         try {
-            int[] vector = validMoves.get(random.nextInt(directions.length - 1));
-            move(vector[X], vector[Y]);
-        } catch (Exception e) {
+            Direction direction = validMoves.get(random.nextInt(Direction.values().length));
+            move(direction);
+        }
+        catch (Exception ignored) {
         }
     }
 

@@ -1,5 +1,6 @@
 package com.codecool.quest.logic.actors;
 
+import com.codecool.quest.Direction;
 import com.codecool.quest.logic.Cell;
 
 import java.util.ArrayList;
@@ -23,20 +24,13 @@ public class Boss extends Npc{
 
     @Override
     public void moveAi() {
-        final int X = 0, Y = 1;
-        int[][] directions = {
-                {1, 0},
-                {0, 1},
-                {-1, 0},
-                {0, -1}
-        };
         ArrayList<int[]> validMoves = new ArrayList<>();
-        for (int[] direction : directions) {
-            Cell neighbor = cell.getNeighbor(direction[X], direction[Y]);
+        for (Direction direction : Direction.values()) {
+            Cell neighbor = cell.getNeighbor(direction);
             Actor actor = neighbor.getActor();
             if (actor instanceof Player) {
                 if (((Player) actor).getInventory().contains("gold")) {
-                    this.move(1,0);
+                    this.move(Direction.EAST);
                     ((Player) actor).getInventory().removeItemByItemName("gold");
                 }else {
                     this.attack(actor);

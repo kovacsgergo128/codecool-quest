@@ -1,5 +1,6 @@
 package com.codecool.quest.logic.actors;
 
+import com.codecool.quest.Direction;
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.Inventory;
 
@@ -27,8 +28,8 @@ public class Player extends Actor {
     }
 
     @Override
-    public Cell move(int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
+    public Cell move(Direction direction) {
+        Cell nextCell = cell.getNeighbor(direction);
         if (nextCell != null && nextCell.getActor() instanceof Npc) {
             attack(nextCell.getActor());
             return nextCell;
