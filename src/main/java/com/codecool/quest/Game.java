@@ -4,6 +4,8 @@ import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -18,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ public class Game {
     Label playerNameLabel = new Label();
     TextField nameInput = new TextField();
     Button setNameButton = new Button("Set Name");
+    Integer Aimove = 0;
 
     public void gameStart(Stage primaryStage) {
         this.loadLevels();
@@ -75,6 +79,7 @@ public class Game {
         scene.setOnKeyPressed(this::onKeyPressed);
         pickButton.setOnAction(this::onPickButtonClick);
         pickButton.setFocusTraversable(false);
+
 
         primaryStage.setTitle("Codecool Quest");
         primaryStage.show();
@@ -149,8 +154,11 @@ public class Game {
         int targetCellY;
         int xOffset = 12;
         int yOffset = 10;
+        if(this.Aimove == 0){
+            StartAi();
+            this.Aimove++;
+        }
 
-        aiMove();
         if (!map.getPlayer().isAlive()) {
             loadLevels();
             map = levels[0];
@@ -235,6 +243,9 @@ public class Game {
 
     private void aiMove() {
         ArrayList<Actor> actors = new ArrayList<>();
+
+
+
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
@@ -246,7 +257,29 @@ public class Game {
         for (Actor actor : actors) {
             actor.moveAi();
         }
+
     }
+
+    public void StartAi(){
+        Runnable task = () -> {
+            while(true){
+                aiMove();
+                refresh();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    System.out.println("hey");;
+                }
+            }
+
+
+        };
+
+        Thread backgroundThread = new Thread(task);
+        backgroundThread.start();
+    }
+
+
 
     public void loadLevels() {
         int actualIndex = 0;
