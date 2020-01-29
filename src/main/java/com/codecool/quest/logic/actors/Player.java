@@ -3,6 +3,7 @@ package com.codecool.quest.logic.actors;
 import com.codecool.quest.logic.Direction;
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.Inventory;
+import com.codecool.quest.logic.Items.Sword;
 
 public class Player extends Actor {
     private String name = "Player";
@@ -11,6 +12,7 @@ public class Player extends Actor {
 
     public Player(Cell cell) {
         super(cell);
+        this.setDefaultAttackPower(5);
     }
 
     @Override
@@ -54,7 +56,10 @@ public class Player extends Actor {
 
     @Override
     public void attack(Actor enemy) {
-        enemy.changeHealth(this.inventory.contains("sword") ? -10 : -5);
+        if (this.inventory.contains("sword"))
+            enemy.changeHealth(-(this.getDefaultAttackPower() + Sword.getExtraAttackPower()));
+        else
+            enemy.changeHealth(-this.getDefaultAttackPower());
     }
 
     @Override

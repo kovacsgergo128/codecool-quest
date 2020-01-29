@@ -80,7 +80,6 @@ public class Game {
         pickButton.setOnAction(this::onPickButtonClick);
         pickButton.setFocusTraversable(false);
 
-
         primaryStage.setTitle("Codecool Quest");
         primaryStage.show();
     }
@@ -145,48 +144,91 @@ public class Game {
 
     private void refresh() {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        int east, west, north, south;
-        int charX = map.getPlayer().getX();
-        int charY = map.getPlayer().getY();
-        int width = map.getWidth();
-        int height = map.getHeight();
-        int targetCellX = 0;
-        int targetCellY;
-        int xOffset = 12;
-        int yOffset = 10;
+        context.setFill(Color.BLACK);
+
         if(this.Aimove == 0){
             StartAi();
             this.Aimove++;
         }
+        restartGameIfPlayerDies();
+        refreshTiles();
+        refreshPlayerHealthLabel();
+        refreshPlayerNameLabel();
+        refreshInventoryView();
+        handlePickupButton();
 
-        if (!map.getPlayer().isAlive()) {
-            loadLevels();
-            map = levels[0];
-            map.getPlayer().setHealth(10);
-            return;
-        }
+    }
 
+    private void refreshAi(){
+        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         context.setFill(Color.BLACK);
 
-        if (height > 20 || width > 25) {
-            north = charY - yOffset;
-            west = charX - xOffset - 1;
-            south = charY + yOffset;
-            east = charX + xOffset + 1;
-        } else {
-            north = 0;
-            west = 0;
-            south = height;
-            east = width;
+        if(this.Aimove == 0){
+            StartAi();
+            this.Aimove++;
         }
+        restartGameIfPlayerDies();
+        refreshTiles();
+        refreshPlayerHealthLabel();
+        refreshPlayerNameLabel();
+        handlePickupButton();
+    }
 
-        for (int x = west; x < east; x++) {
-            targetCellY = 0;
-            for (int y = north; y < south; y++) {
+    private void changeLevel(Cell nextCell) {
+        if (nextCell != null && nextCell.getStairs() != null) {
+            Object[] playerAttributes = this.map.getPlayer().getAttributesForLevelChange();
+            int levelTo = nextCell.getStairs().getLevel();
+            this.levels[map.getCurrentLevel()] = this.map;
+            this.map = this.levels[levelTo];
+            this.map.getPlayer().setAttributesOnNewLevel(playerAttributes);
+            refresh();
+        }
+    }
 
-                if (x >= width || x < 0 ||
-                        y >= height || y < 0
-                ) {
+    private void aiMove() {
+        ArrayList<Actor> actors = new ArrayList<>();
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                Cell cell = map.getCell(x, y);
+                if (cell.getActor() instanceof Npc && cell.getActor().isAlive()) {
+                    actors.add(cell.getActor());
+                }
+            }
+        }
+        for (Actor actor : actors) {
+            actor.moveAi();
+        }
+    }
+
+    public void loadLevels() {
+        int actualIndex = 0;
+        for (MapFile level : MapFile.values()) {
+            levels[actualIndex] = MapLoader.loadMap(level.getLevelMap(),level.getLevelIndex());
+            actualIndex++;
+        }
+    }
+
+    public void restartGameIfPlayerDies() {
+        if (!this.map.getPlayer().isAlive()) {
+            loadLevels();
+            this.map = levels[0];
+            this.map.getPlayer().setHealth(10);
+        }
+    }
+
+    public void refreshTiles() {
+        final int NORTH = 0;
+        final int WEST = 1;
+        final int SOUTH = 2;
+        final int EAST = 3;
+
+        int[]params = setParametersForMapMove();
+        int targetCellX = 0;
+        for (int x = params[WEST]; x < params[EAST]; x++) {
+            int targetCellY = 0;
+            for (int y = params[NORTH]; y < params[SOUTH]; y++) {
+
+                if (x >= this.map.getWidth() || x < 0 || y >= this.map.getHeight() || y < 0) {
                     Tiles.drawTile(context, new Cell(0, 0, CellType.EMPTY), targetCellX, targetCellY);
                     targetCellY++;
                     continue;
@@ -212,13 +254,29 @@ public class Game {
             }
             targetCellX++;
         }
-        playerNameLabel.setText(map.getPlayer().getName());
-        inventory.getItems().clear();
-        for (Items item : map.getPlayer().getInventory().getItems()) {
-            inventory.getItems().add(item.getTileName());
-        }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+    }
+    public int[] setParametersForMapMove () {
+        int[] params = new int[4];
+        int charX = map.getPlayer().getX();
+        int charY = map.getPlayer().getY();
+        int xOffset = 12;
+        int yOffset = 10;
 
+        if (this.map.getHeight() > 20 || this.map.getWidth() > 25) {
+            params[0] = charY - yOffset;
+            params[1] = charX - xOffset - 1;
+            params[2] = charY + yOffset;
+            params[3] = charX + xOffset + 1;
+        } else {
+            params[0] = 0;
+            params[1] = 0;
+            params[2] = this.map.getHeight();
+            params[3] = this.map.getWidth();
+        }
+        return params;
+    }
+
+    public void handlePickupButton () {
         if (map.getPlayer().getCell().getItem() != null) {
             pickButton.setText("Pick up " + map.getPlayer().getCell().getItem().getTileName());
             pickButton.setDisable(false);
@@ -230,41 +288,22 @@ public class Game {
         canvas.requestFocus();
     }
 
-    private void changeLevel(Cell nextCell) {
-        if (nextCell != null && nextCell.getStairs() != null) {
-            Object[] playerAttributes = this.map.getPlayer().getAttributesForLevelChange();
-            int levelTo = nextCell.getStairs().getLevel();
-            this.levels[map.getCurrentLevel()] = this.map;
-            this.map = this.levels[levelTo];
-            this.map.getPlayer().setAttributesOnNewLevel(playerAttributes);
-            refresh();
+    public void refreshInventoryView() {
+        inventory.getItems().clear();
+        for (Items item : map.getPlayer().getInventory().getItems()) {
+            inventory.getItems().add(item.getTileName());
         }
     }
 
-    private void aiMove() {
-        ArrayList<Actor> actors = new ArrayList<>();
-
-
-
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
-                if (cell.getActor() instanceof Npc && cell.getActor().isAlive()) {
-                    actors.add(cell.getActor());
-                }
-            }
-        }
-        for (Actor actor : actors) {
-            actor.moveAi();
-        }
-
+    public void refreshPlayerHealthLabel() {
+        healthLabel.setText("" + map.getPlayer().getHealth());
     }
 
     public void StartAi(){
         Runnable task = () -> {
             while(true){
                 aiMove();
-                refresh();
+                refreshAi();
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -281,15 +320,9 @@ public class Game {
 
 
 
-    public void loadLevels() {
-        int actualIndex = 0;
-        for (MapFile level : MapFile.values()) {
-            levels[actualIndex] = MapLoader.loadMap(level.getLevelMap(),level.getLevelIndex());
-            System.out.println(level.getLevelIndex());
-            actualIndex++;
-        }
+    public void refreshPlayerNameLabel() {
+        playerNameLabel.setText(map.getPlayer().getName());
     }
-
 }
 
 
