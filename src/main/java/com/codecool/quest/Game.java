@@ -4,6 +4,8 @@ import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -18,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ public class Game {
     Label playerNameLabel = new Label();
     TextField nameInput = new TextField();
     Button setNameButton = new Button("Set Name");
+    Integer Aimove = 0;
 
     public void gameStart(Stage primaryStage) {
         this.loadLevels();
@@ -142,12 +146,30 @@ public class Game {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         context.setFill(Color.BLACK);
 
-        aiMove();
+        if(this.Aimove == 0){
+            StartAi();
+            this.Aimove++;
+        }
         restartGameIfPlayerDies();
         refreshTiles();
         refreshPlayerHealthLabel();
         refreshPlayerNameLabel();
         refreshInventoryView();
+        handlePickupButton();
+    }
+
+    private void refreshAi(){
+        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        context.setFill(Color.BLACK);
+
+        if(this.Aimove == 0){
+            StartAi();
+            this.Aimove++;
+        }
+        restartGameIfPlayerDies();
+        refreshTiles();
+        refreshPlayerHealthLabel();
+        refreshPlayerNameLabel();
         handlePickupButton();
     }
 
@@ -275,6 +297,27 @@ public class Game {
     public void refreshPlayerHealthLabel() {
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
+
+    public void StartAi(){
+        Runnable task = () -> {
+            while(true){
+                aiMove();
+                refreshAi();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    System.out.println("hey");;
+                }
+            }
+
+
+        };
+
+        Thread backgroundThread = new Thread(task);
+        backgroundThread.start();
+    }
+
+
 
     public void refreshPlayerNameLabel() {
         playerNameLabel.setText(map.getPlayer().getName());
