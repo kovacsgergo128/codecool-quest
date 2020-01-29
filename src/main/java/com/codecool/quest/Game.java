@@ -149,7 +149,6 @@ public class Game {
         refreshPlayerNameLabel();
         refreshInventoryView();
         handlePickupButton();
-
     }
 
     private void changeLevel(Cell nextCell) {
