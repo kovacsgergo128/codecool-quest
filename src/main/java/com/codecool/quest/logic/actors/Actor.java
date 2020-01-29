@@ -7,6 +7,7 @@ import com.codecool.quest.logic.Drawable;
 public abstract class Actor implements Drawable {
     protected Cell cell;
     private int health = 10;
+    private int defaultAttackPower;
 
     public boolean isAlive() {
         return alive;
@@ -67,6 +68,15 @@ public abstract class Actor implements Drawable {
         }
     }
 
-    public void attack(Actor player){}
+    public void attack(Actor actor){
+        actor.changeHealth(-defaultAttackPower);
+    }
 
+    public int getDefaultAttackPower() {
+        return defaultAttackPower;
+    }
+
+    public void setDefaultAttackPower(int defaultAttackPower) {
+        this.defaultAttackPower = defaultAttackPower;
+    }
 }

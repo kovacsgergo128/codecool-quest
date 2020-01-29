@@ -10,16 +10,12 @@ public class Boss extends Npc{
     public Boss(Cell cell) {
         super(cell);
         this.setHealth(20);
+        this.setDefaultAttackPower(3);
     }
 
     @Override
     public String getTileName() {
         return "boss";
-    }
-
-    @Override
-    public void attack(Actor actor){
-        actor.changeHealth(-3);
     }
 
     @Override

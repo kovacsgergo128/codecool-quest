@@ -9,6 +9,7 @@ import java.util.Random;
 public class Skeleton extends Npc {
     public Skeleton(Cell cell) {
         super(cell);
+        this.setDefaultAttackPower(2);
     }
 
     @Override
@@ -37,10 +38,4 @@ public class Skeleton extends Npc {
         catch (Exception ignored) {
         }
     }
-
-    @Override
-    public void attack(Actor actor){
-       actor.changeHealth(-2);
-    }
-
 }

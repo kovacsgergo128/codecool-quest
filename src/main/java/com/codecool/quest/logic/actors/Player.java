@@ -18,15 +18,6 @@ public class Player extends Actor {
         return "player";
     }
 
-    public Inventory getInventory() {
-        return inventory;
-    }
-
-    public void pickItem() {
-        this.inventory.addItem(this.cell.getItem());
-        this.cell.setItem(null);
-    }
-
     @Override
     public Cell move(Direction direction) {
         Cell nextCell = cell.getNeighbor(direction);
@@ -80,16 +71,22 @@ public class Player extends Actor {
         this.name = name;
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
+
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
+    }
+
+    public boolean getGod() {
+        return this.god;
     }
 
     public void setGod(boolean god) {
         this.god = god;
     }
-    public boolean getGod() {
-        return this.god;
-    }
+
     public Object[] getAttributesForLevelChange() {
         return new Object[]{
                 this.getName(),
@@ -98,10 +95,16 @@ public class Player extends Actor {
                 this.getGod()
         };
     }
+
     public void setAttributesOnNewLevel(Object[] attributes) {
         this.setName((String) attributes[0]);
         this.setHealth((int) attributes[1]);
         this.setInventory((Inventory) attributes[2]);
         this.setGod((boolean) attributes[3]);
+    }
+
+    public void pickItem() {
+        this.inventory.addItem(this.cell.getItem());
+        this.cell.setItem(null);
     }
 }
