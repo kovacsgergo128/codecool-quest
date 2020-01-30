@@ -4,6 +4,7 @@ import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
+import com.codecool.quest.ui.AlertBox;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -245,6 +246,7 @@ public class Game {
 
     public void restartGameIfPlayerDies() {
         if (!this.map.getPlayer().isAlive()) {
+            AlertBox.display(":(", "You Died!", "Try Again?");
             loadLevels();
             this.map = levels[0];
             this.map.getPlayer().setHealth(10);
