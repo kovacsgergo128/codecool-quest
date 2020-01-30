@@ -284,6 +284,8 @@ public class Game {
                     Tiles.drawTile(context, cell.getStairs(), targetCellX, targetCellY);
                 } else if (cell.getDecor() != null) {
                     Tiles.drawTile(context, cell.getDecor(), targetCellX, targetCellY);
+                } else if (cell.getFinish() != null) {
+                    Tiles.drawTile(context, cell.getFinish(), targetCellX, targetCellY);
                 } else {
                     Tiles.drawTile(context, cell, targetCellX, targetCellY);
                 }
@@ -353,6 +355,7 @@ public class Game {
         Thread backgroundThread = new Thread(task);
         backgroundThread.start();
     }
+
     public void refreshPlayerNameLabel() {
         playerNameLabel.setText(map.getPlayer().getName());
     }

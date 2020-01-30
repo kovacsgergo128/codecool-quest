@@ -28,16 +28,19 @@ public class Player extends Actor {
             return nextCell;
         }
         if (nextCell != null &&
-                nextCell.getDoor() != null &&
-                nextCell.getDoor().isLocked() &&
-                this.inventory.contains("key")) {
+            nextCell.getDoor() != null &&
+            nextCell.getDoor().isLocked() &&
+            this.inventory.contains("key")) {
             this.inventory.removeItemByItemName("key");
             nextCell.getDoor().openDoor();
         } else if (nextCell != null &&
-                nextCell.getDecor() != null &&
-                !this.god &&
-                (nextCell.getDecor().getTileName().equals("bonfire") ||
-                        nextCell.getDecor().getTileName().equals("spikes"))) {
+                   nextCell.getFinish() != null) {
+            nextCell.getFinish().winGame();
+        } else if (nextCell != null &&
+                   nextCell.getDecor() != null &&
+                   !this.god &&
+                   (nextCell.getDecor().getTileName().equals("bonfire") ||
+                    nextCell.getDecor().getTileName().equals("spikes"))) {
             this.setHealth(this.getHealth() - 2);
         }
         if (name.equals("Max")) {
@@ -64,7 +67,7 @@ public class Player extends Actor {
 
     @Override
     public void changeHealth(int hp) {
-        if (hp < 0 && god)  return;
+        if (hp < 0 && god) return;
         super.changeHealth(hp);
     }
 

@@ -12,8 +12,12 @@ public class FinishLine implements Drawable {
         this.cell.setFinish(this);
     }
 
+    public void winGame(){
+        hasWon = !hasWon;
+    }
+
     @Override
     public String getTileName() {
-        return null;
+        return "finish";
     }
 }

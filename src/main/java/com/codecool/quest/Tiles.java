@@ -44,12 +44,17 @@ public class Tiles {
         tileMap.put("spikes", new Tile(22, 0));
         tileMap.put("boss", new Tile(24, 1));
         tileMap.put("crown", new Tile(11, 24));
-        tileMap.put("finish", new Tile(12, 25));
+        tileMap.put("finish", new Tile(11, 24));
     }
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
-        context.drawImage(tileset, tile.x, tile.y, tile.w, tile.h,
+        context.drawImage(
+                tileset,
+                tile.x,
+                tile.y,
+                tile.w,
+                tile.h,
                 x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
     }
 }
