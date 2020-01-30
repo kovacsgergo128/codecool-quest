@@ -50,6 +50,7 @@ public class Game {
     Scene menuSecene;
     Button startGameButton = new Button("Start game!");
     Button exitMenuButton = new Button("Exit");
+    Button loadGameButton = new Button("Load game");
 
     public void gameStart(Stage primaryStage) throws IOException {
         System.out.println(Arrays.toString(GameSaver.getSavedFiles()));
@@ -121,10 +122,18 @@ public class Game {
         VBox menuLayout = new VBox(8);
         startGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         exitMenuButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        menuLayout.getChildren().addAll(startGameButton, exitMenuButton);
+        loadGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        menuLayout.getChildren().addAll(startGameButton, loadGameButton, exitMenuButton);
         menuLayout.setAlignment(Pos.CENTER);
         startGameButton.setOnAction(e -> window.setScene(scene));
         exitMenuButton.setOnAction(e -> window.close());
+        loadGameButton.setOnAction(actionEvent -> {
+            try {
+                onLoadGameButtonClick(actionEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         BackgroundImage myBI = new BackgroundImage(new Image("CClogo.png", 300, 300, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
@@ -135,6 +144,12 @@ public class Game {
         window.setScene(menuSecene);
         window.setTitle("Codecool Quest");
         window.show();
+    }
+
+    private void onLoadGameButtonClick(ActionEvent actionEvent) throws IOException {
+        String[] savedFileNames = GameSaver.getSavedFiles();
+        System.out.println(Arrays.toString(savedFileNames));
+
     }
 
     private void onCancelButton(ActionEvent actionEvent) {
