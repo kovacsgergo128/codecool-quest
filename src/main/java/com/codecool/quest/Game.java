@@ -25,7 +25,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.SortedMap;
 
 public class Game {
@@ -49,7 +51,8 @@ public class Game {
     Button startGameButton = new Button("Start game!");
     Button exitMenuButton = new Button("Exit");
 
-    public void gameStart(Stage primaryStage) {
+    public void gameStart(Stage primaryStage) throws IOException {
+        System.out.println(Arrays.toString(GameSaver.getSavedFiles()));
         window = primaryStage;
 //      2D graphics canvas
         this.loadLevels();
@@ -167,6 +170,7 @@ public class Game {
                 savedGameName.clear();
                 savedGameName.setVisible(false);
                 savedGameName.setFocusTraversable(true);
+                cancelSaveButton.setVisible(false);
                 canvas.requestFocus();
                 savedGameName.setFocusTraversable(false);
             }

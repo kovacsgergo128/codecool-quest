@@ -1,9 +1,6 @@
 package com.codecool.quest;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import com.codecool.quest.logic.GameMap;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -11,6 +8,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 public class GameSaver {
 
@@ -46,5 +45,22 @@ public class GameSaver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String[] getSavedFiles() throws IOException {
+        File saveFolder = new File(BASE_SAVE_PATH);
+        FilenameFilter filter = (dir, name) -> name.toLowerCase().endsWith(".json");
+        File[] savedFiles = saveFolder.listFiles(filter);
+
+        if (savedFiles.length != 0){
+            String[] savedFileNames = new String[savedFiles.length];
+            int indexCounter = 0;
+            for (File savedFile : savedFiles) {
+                savedFileNames[indexCounter] = FilenameUtils.getBaseName(savedFile.getName());
+                indexCounter++;
+            }
+            return savedFileNames;
+        }
+        return null;
     }
 }
