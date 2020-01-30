@@ -246,7 +246,7 @@ public class Game {
 
     public void restartGameIfPlayerDies() {
         if (!this.map.getPlayer().isAlive()) {
-            AlertBox.display(":(", "You Died!", "Try Again?");
+            AlertBox.display(":(", "You Died!", "Try Again?", "red", "25px");
             loadLevels();
             this.map = levels[0];
             this.map.getPlayer().setHealth(10);
