@@ -3,8 +3,10 @@ package com.codecool.quest.logic.actors;
 import com.codecool.quest.logic.Direction;
 import com.codecool.quest.logic.Cell;
 import com.codecool.quest.logic.Drawable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 public abstract class Actor implements Drawable {
+    @JsonBackReference
     protected Cell cell;
     private int health = 10;
     private int defaultAttackPower;

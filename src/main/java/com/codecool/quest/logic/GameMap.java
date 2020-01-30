@@ -1,11 +1,14 @@
 package com.codecool.quest.logic;
 
 import com.codecool.quest.logic.actors.Player;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 public class GameMap {
     private int currentLevel;
     private int width;
     private int height;
+
+    @JsonManagedReference
     private Cell[][] cells;
 
     private Player player;

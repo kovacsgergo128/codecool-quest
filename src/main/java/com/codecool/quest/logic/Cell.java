@@ -5,14 +5,24 @@ import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.decorations.Decor;
 import com.codecool.quest.logic.interactable.Door;
 import com.codecool.quest.logic.interactable.Stairs;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 public class Cell implements Drawable {
+    @JsonManagedReference
     private Decor decor;
     private CellType type;
+    @JsonManagedReference
     private Actor actor;
+    @JsonManagedReference
     private Door door;
+    @JsonManagedReference
     private Stairs stairs;
+
+    @JsonBackReference
     private GameMap gameMap;
+
+    @JsonManagedReference
     private Items item;
     private int x, y;
 

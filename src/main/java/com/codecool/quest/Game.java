@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.SortedMap;
 
 public class Game {
     GameMap[] levels = new GameMap[MapFile.values().length];
@@ -38,6 +39,9 @@ public class Game {
     Label playerNameLabel = new Label();
     TextField nameInput = new TextField();
     Button setNameButton = new Button("Set Name");
+    Button saveButton = new Button("Save game");
+    Button cancelSaveButton = new Button("Cancel");
+    TextField savedGameName = new TextField();
     Integer Aimove = 0;
 
     Stage window;
@@ -69,19 +73,30 @@ public class Game {
         ui.setPrefWidth(210);
         ui.setPadding(new Insets(10));
         ui.setVgap(10);
-        ui.add(new Label("Inventory:"), 0, 3);
-        ui.add(pickButton, 0, 6, 2, 1);
+        ui.add(new Label("Inventory:"), 0, 2);
+        ui.add(pickButton, 0, 5, 2, 1);
         pickButton.setDisable(true);
-        ui.add(inventory, 0, 4, 2, 1);
+        ui.add(inventory, 0, 3, 2, 1);
         inventory.setFocusTraversable(false);
         nameInput.setPrefWidth(120);
-        ui.add(nameInput, 0, 8);
-        ui.add(setNameButton, 0, 9);
+        ui.add(nameInput, 0, 7);
+        ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(this::onSetNameButtonClick);
         ui.add(new Label("Name: "), 0, 0);
         ui.add(playerNameLabel, 1, 0);
+        ui.add(saveButton, 0, 10);
+        ui.add(savedGameName, 0, 9);
+        ui.add(cancelSaveButton, 1, 10);
+        saveButton.setOnAction(this::onSaveGameButtonClick);
+        saveButton.setFocusTraversable(false);
+        cancelSaveButton.setFocusTraversable(false);
+        cancelSaveButton.setOnAction(this::onCancelButton);
+        cancelSaveButton.setVisible(false);
+        savedGameName.setVisible(false);
+        savedGameName.setPrefWidth(120);
         nameInput.setFocusTraversable(false);
         setNameButton.setFocusTraversable(false);
+
 
 
 //      Canvas, HUD wrapper
@@ -119,6 +134,15 @@ public class Game {
         window.show();
     }
 
+    private void onCancelButton(ActionEvent actionEvent) {
+        savedGameName.clear();
+        savedGameName.setVisible(false);
+        cancelSaveButton.setVisible(false);
+        savedGameName.setFocusTraversable(true);
+        canvas.requestFocus();
+        savedGameName.setFocusTraversable(false);
+    }
+
     private void onSetNameButtonClick(ActionEvent actionEvent) {
         String input = nameInput.getText();
         map.getPlayer().setName(input);
@@ -133,6 +157,24 @@ public class Game {
     private void onPickButtonClick(ActionEvent actionEvent) {
         map.getPlayer().pickItem();
         refresh();
+    }
+
+    private void onSaveGameButtonClick(ActionEvent actionEvent) {
+        if (savedGameName.isVisible()) {
+            String filename = savedGameName.getText();
+            if (!filename.equals("")){
+                GameSaver.writeSaveFile(filename, levels, map.getCurrentLevel());
+                savedGameName.clear();
+                savedGameName.setVisible(false);
+                savedGameName.setFocusTraversable(true);
+                canvas.requestFocus();
+                savedGameName.setFocusTraversable(false);
+            }
+        }
+        else {
+            savedGameName.setVisible(true);
+            cancelSaveButton.setVisible(true);
+        }
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
