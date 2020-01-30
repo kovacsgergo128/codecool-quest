@@ -4,8 +4,7 @@ import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -20,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -36,6 +34,10 @@ public class Game {
     TextField nameInput = new TextField();
     Button setNameButton = new Button("Set Name");
     Integer Aimove = 0;
+    AiMovement AiMove;
+    AiMovement AiMovies;
+    AiMovement Aimovies2;
+    AiMovement Aimovies3;
 
     public void gameStart(Stage primaryStage) {
         this.loadLevels();
@@ -104,6 +106,9 @@ public class Game {
         switch (keyEvent.getCode()) {
             case UP:
                 nextCell = map.getPlayer().move(Direction.NORTH);
+                System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
+
+
                 changeLevel(nextCell);
                 refresh();
                 break;
@@ -147,9 +152,33 @@ public class Game {
         context.setFill(Color.BLACK);
 
         if(this.Aimove == 0){
-            StartAi();
+            AiMovies = new AiMovement(map, context, canvas, playerNameLabel, healthLabel);
+            AiMovies.start();
             this.Aimove++;
         }
+
+
+
+
+        if(this.Aimove == 2){
+            this.map = this.levels[1];
+            AiMovies.cancel();
+            Aimovies2 = new AiMovement(map, context, canvas, playerNameLabel, healthLabel);
+            Aimovies2.start();
+            this.Aimove++;
+
+        }
+
+        if(this.Aimove == 4){
+            this.map = this.levels[2];
+            Aimovies2.cancel();
+            Aimovies3 = new AiMovement(map, context, canvas, playerNameLabel, healthLabel);
+            Aimovies3.start();
+            this.Aimove++;
+        }
+
+
+
         restartGameIfPlayerDies();
         refreshTiles();
         refreshPlayerHealthLabel();
@@ -162,10 +191,8 @@ public class Game {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         context.setFill(Color.BLACK);
 
-        if(this.Aimove == 0){
-            StartAi();
-            this.Aimove++;
-        }
+
+
         restartGameIfPlayerDies();
         refreshTiles();
         refreshPlayerHealthLabel();
@@ -180,6 +207,11 @@ public class Game {
             this.levels[map.getCurrentLevel()] = this.map;
             this.map = this.levels[levelTo];
             this.map.getPlayer().setAttributesOnNewLevel(playerAttributes);
+            Aimove = 2;
+            if(this.map == this.levels[2]){
+                Aimove = 4;
+
+            }
             refresh();
         }
     }
@@ -212,6 +244,7 @@ public class Game {
             loadLevels();
             this.map = levels[0];
             this.map.getPlayer().setHealth(10);
+            this.Aimove = 0;
         }
     }
 
@@ -312,7 +345,6 @@ public class Game {
 
 
         };
-
         Thread backgroundThread = new Thread(task);
         backgroundThread.start();
     }
@@ -322,6 +354,9 @@ public class Game {
     public void refreshPlayerNameLabel() {
         playerNameLabel.setText(map.getPlayer().getName());
     }
+
+
+
 }
 
 
