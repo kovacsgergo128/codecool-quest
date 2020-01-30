@@ -5,6 +5,7 @@ import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
 import com.codecool.quest.ui.AlertBox;
+import com.codecool.quest.ui.LoadGameBox;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -44,6 +45,7 @@ public class Game {
     Stage window;
     Scene menuSecene;
     Button startGameButton = new Button("Start game!");
+    Button loadGameButton = new Button("Load game!");
     Button exitMenuButton = new Button("Exit");
 
     public void gameStart(Stage primaryStage) {
@@ -103,10 +105,12 @@ public class Game {
 //      Layout & Scene for menu
         VBox menuLayout = new VBox(8);
         startGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        loadGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         exitMenuButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        menuLayout.getChildren().addAll(startGameButton, exitMenuButton);
+        menuLayout.getChildren().addAll(startGameButton, loadGameButton, exitMenuButton);
         menuLayout.setAlignment(Pos.CENTER);
         startGameButton.setOnAction(e -> window.setScene(scene));
+        loadGameButton.setOnAction(e -> LoadGameBox.display("Window title", "Load game?"));
         exitMenuButton.setOnAction(e -> window.close());
         BackgroundImage myBI = new BackgroundImage(new Image("CClogo.png", 300, 300, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -188,6 +192,7 @@ public class Game {
             this.Aimove++;
         }
         restartGameIfPlayerDies();
+        checkPlayerHasWon();
         refreshTiles();
         refreshPlayerHealthLabel();
         refreshPlayerNameLabel();
@@ -204,6 +209,7 @@ public class Game {
             this.Aimove++;
         }
         restartGameIfPlayerDies();
+        checkPlayerHasWon();
         refreshTiles();
         refreshPlayerHealthLabel();
         refreshPlayerNameLabel();
@@ -243,7 +249,11 @@ public class Game {
             actualIndex++;
         }
     }
-
+    public void checkPlayerHasWon(){
+        if(!this.map.getPlayer().isHasWon()){
+            AlertBox.display("Victory window","You won the game!","Play Again", "red", "25px");
+        }
+    }
     public void restartGameIfPlayerDies() {
         if (!this.map.getPlayer().isAlive()) {
             AlertBox.display(":(", "You Died!", "Try Again?", "red", "25px");

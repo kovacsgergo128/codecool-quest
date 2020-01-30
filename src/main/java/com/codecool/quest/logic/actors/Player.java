@@ -9,6 +9,7 @@ public class Player extends Actor {
     private String name = "Player";
     Inventory inventory = new Inventory();
     private boolean god = false;
+    private boolean hasWon = true;
 
     public Player(Cell cell) {
         super(cell);
@@ -18,6 +19,10 @@ public class Player extends Actor {
     @Override
     public String getTileName() {
         return "player";
+    }
+
+    public boolean isHasWon() {
+        return hasWon;
     }
 
     @Override
@@ -35,7 +40,7 @@ public class Player extends Actor {
             nextCell.getDoor().openDoor();
         } else if (nextCell != null &&
                    nextCell.getFinish() != null) {
-            nextCell.getFinish().winGame();
+            this.winGame();
         } else if (nextCell != null &&
                    nextCell.getDecor() != null &&
                    !this.god &&
@@ -55,6 +60,10 @@ public class Player extends Actor {
             cell = nextCell;
         }
         return nextCell;
+    }
+
+    public void winGame(){
+        hasWon = !hasWon;
     }
 
     @Override
