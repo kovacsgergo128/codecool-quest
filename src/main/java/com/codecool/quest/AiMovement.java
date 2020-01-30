@@ -1,11 +1,13 @@
 package com.codecool.quest;
 
 import com.codecool.quest.logic.*;
+import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
 import com.codecool.quest.logic.actors.Player;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.canvas.Canvas;
@@ -27,15 +29,17 @@ public class AiMovement extends Service {
     Label Playerr;
     Label Healthh;
     private Thread threadToStopOnCancel;
+    ListView<String> Inventory;
 
 
-    public <Gamemap> AiMovement(Gamemap map, GraphicsContext context, Canvas Canvas, Label Player, Label Health){
+    public <Gamemap> AiMovement(Gamemap map, GraphicsContext context, Canvas Canvas, Label Player, Label Health, ListView<String> inventory){
         this.mapp = (GameMap) map;
         this.contextt = context;
         this.Canvass = Canvas;
         this.Playerr = Player;
         this.Healthh = Health;
         //this.levelss = levels;
+        this.Inventory = inventory;
     }
 
 
@@ -100,6 +104,8 @@ public class AiMovement extends Service {
         refreshTiles();
         //refreshPlayerHealthLabel();
         refreshPlayerNameLabel();
+        refreshInventoryView();
+
     }
     public void refreshTiles() {
         final int NORTH = 0;
@@ -185,6 +191,14 @@ public class AiMovement extends Service {
     public void refreshPlayerHealthLabel() {
         Healthh.setText("" + mapp.getPlayer().getHealth());
     }
+
+    public void refreshInventoryView() {
+        Inventory.getItems().clear();
+        for (Items item : mapp.getPlayer().getInventory().getItems()) {
+            Inventory.getItems().add(item.getTileName());
+        }
+    }
+
 
     /*
     private void changeLevel(Cell nextCell) {

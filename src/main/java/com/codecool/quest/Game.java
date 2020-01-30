@@ -4,9 +4,11 @@ import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
+import com.codecool.quest.ui.AlertBox;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,11 +16,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -39,7 +44,14 @@ public class Game {
     AiMovement Aimovies2;
     AiMovement Aimovies3;
 
+    Stage window;
+    Scene menuSecene;
+    Button startGameButton = new Button("Start game!");
+    Button exitMenuButton = new Button("Exit");
+
     public void gameStart(Stage primaryStage) {
+        window = primaryStage;
+//      2D graphics canvas
         this.loadLevels();
         map = levels[0];
         canvas = new Canvas(
@@ -47,21 +59,25 @@ public class Game {
                 map.getHeight() * Tiles.TILE_WIDTH);
         context = canvas.getGraphicsContext2D();
 
+//      HUD for health, inventory, playername
+
+//      TOP part of HUD
+        GridPane topGrid = new GridPane();
+        Label health = new Label("Health:");
+        health.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        topGrid.add(health, 0, 1);
+        healthLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        topGrid.add(healthLabel, 1, 1);
+//      RIGHT part of HUD
         GridPane ui = new GridPane();
         ui.setPrefWidth(210);
         ui.setPadding(new Insets(10));
         ui.setVgap(10);
-
-        ui.add(new Label("Health: "), 0, 1);
-        ui.add(healthLabel, 1, 1);
         ui.add(new Label("Inventory:"), 0, 3);
         ui.add(pickButton, 0, 6, 2, 1);
-
         pickButton.setDisable(true);
-
         ui.add(inventory, 0, 4, 2, 1);
         inventory.setFocusTraversable(false);
-
         nameInput.setPrefWidth(120);
         ui.add(nameInput, 0, 8);
         ui.add(setNameButton, 0, 9);
@@ -70,21 +86,43 @@ public class Game {
         ui.add(playerNameLabel, 1, 0);
         nameInput.setFocusTraversable(false);
         setNameButton.setFocusTraversable(false);
-        BorderPane borderPane = new BorderPane();
 
+
+//      Canvas, HUD wrapper
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
-
+        borderPane.setTop(topGrid);
+        BackgroundFill myBF = new BackgroundFill(Color.BLANCHEDALMOND, new CornerRadii(1),
+                new Insets(0.0, 0.0, 0.0, 0.0));
+        borderPane.setBackground(new Background(myBF));
         Scene scene = new Scene(borderPane);
-        primaryStage.setScene(scene);
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
         pickButton.setOnAction(this::onPickButtonClick);
         pickButton.setFocusTraversable(false);
 
-        primaryStage.setTitle("Codecool Quest");
-        primaryStage.show();
+//      Layout & Scene for menu
+        VBox menuLayout = new VBox(8);
+        startGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        exitMenuButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        menuLayout.getChildren().addAll(startGameButton, exitMenuButton);
+        menuLayout.setAlignment(Pos.CENTER);
+        startGameButton.setOnAction(e -> window.setScene(scene));
+        exitMenuButton.setOnAction(e -> window.close());
+        BackgroundImage myBI = new BackgroundImage(new Image("CClogo.png", 300, 300, false, true),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        menuLayout.setBackground(new Background(myBI));
+        menuSecene = new Scene(menuLayout, 300, 300);
+
+//      Start of JavaFX
+        window.setScene(menuSecene);
+        window.setTitle("Codecool Quest");
+        window.show();
     }
+
     private void onSetNameButtonClick(ActionEvent actionEvent) {
         String input = nameInput.getText();
         map.getPlayer().setName(input);
@@ -152,7 +190,7 @@ public class Game {
         context.setFill(Color.BLACK);
 
         if(this.Aimove == 0){
-            AiMovies = new AiMovement(map, context, canvas, playerNameLabel, healthLabel);
+            AiMovies = new AiMovement(map, context, canvas, playerNameLabel, healthLabel, inventory);
             AiMovies.start();
             this.Aimove++;
         }
@@ -163,7 +201,7 @@ public class Game {
         if(this.Aimove == 2){
             this.map = this.levels[1];
             AiMovies.cancel();
-            Aimovies2 = new AiMovement(map, context, canvas, playerNameLabel, healthLabel);
+            Aimovies2 = new AiMovement(map, context, canvas, playerNameLabel, healthLabel, inventory);
             Aimovies2.start();
             this.Aimove++;
 
@@ -172,7 +210,7 @@ public class Game {
         if(this.Aimove == 4){
             this.map = this.levels[2];
             Aimovies2.cancel();
-            Aimovies3 = new AiMovement(map, context, canvas, playerNameLabel, healthLabel);
+            Aimovies3 = new AiMovement(map, context, canvas, playerNameLabel, healthLabel, inventory);
             Aimovies3.start();
             this.Aimove++;
         }
@@ -234,17 +272,21 @@ public class Game {
     public void loadLevels() {
         int actualIndex = 0;
         for (MapFile level : MapFile.values()) {
-            levels[actualIndex] = MapLoader.loadMap(level.getLevelMap(),level.getLevelIndex());
+            levels[actualIndex] = MapLoader.loadMap(level.getLevelMap(), level.getLevelIndex());
             actualIndex++;
         }
     }
 
     public void restartGameIfPlayerDies() {
         if (!this.map.getPlayer().isAlive()) {
+            AlertBox.display(":(", "You Died!", "Try Again?");
             loadLevels();
             this.map = levels[0];
             this.map.getPlayer().setHealth(10);
             this.Aimove = 0;
+            AiMovies.cancel();
+            Aimovies2.cancel();
+            Aimovies3.cancel();
         }
     }
 
@@ -254,7 +296,7 @@ public class Game {
         final int SOUTH = 2;
         final int EAST = 3;
 
-        int[]params = setParametersForMapMove();
+        int[] params = setParametersForMapMove();
         int targetCellX = 0;
         for (int x = params[WEST]; x < params[EAST]; x++) {
             int targetCellY = 0;
@@ -287,7 +329,8 @@ public class Game {
             targetCellX++;
         }
     }
-    public int[] setParametersForMapMove () {
+
+    public int[] setParametersForMapMove() {
         int[] params = new int[4];
         int charX = map.getPlayer().getX();
         int charY = map.getPlayer().getY();
@@ -342,15 +385,11 @@ public class Game {
                     System.out.println("hey");;
                 }
             }
-
-
         };
+
         Thread backgroundThread = new Thread(task);
         backgroundThread.start();
     }
-
-
-
     public void refreshPlayerNameLabel() {
         playerNameLabel.setText(map.getPlayer().getName());
     }
