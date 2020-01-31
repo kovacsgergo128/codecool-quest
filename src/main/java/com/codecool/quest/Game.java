@@ -190,6 +190,7 @@ public class Game {
         context.setFill(Color.BLACK);
 
         if(this.Aimove == 0){
+
             AiMovies = new AiMovement(map, context, canvas, playerNameLabel, healthLabel, inventory);
             AiMovies.start();
             this.Aimove++;
@@ -200,6 +201,7 @@ public class Game {
 
         if(this.Aimove == 2){
             this.map = this.levels[1];
+
             AiMovies.cancel();
             Aimovies2 = new AiMovement(map, context, canvas, playerNameLabel, healthLabel, inventory);
             Aimovies2.start();
@@ -225,18 +227,6 @@ public class Game {
         handlePickupButton();
     }
 
-    private void refreshAi(){
-        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        context.setFill(Color.BLACK);
-
-
-
-        restartGameIfPlayerDies();
-        refreshTiles();
-        refreshPlayerHealthLabel();
-        refreshPlayerNameLabel();
-        handlePickupButton();
-    }
 
     private void changeLevel(Cell nextCell) {
         if (nextCell != null && nextCell.getStairs() != null) {
@@ -374,22 +364,8 @@ public class Game {
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
 
-    public void StartAi(){
-        Runnable task = () -> {
-            while(true){
-                aiMove();
-                refreshAi();
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    System.out.println("hey");;
-                }
-            }
-        };
 
-        Thread backgroundThread = new Thread(task);
-        backgroundThread.start();
-    }
+
     public void refreshPlayerNameLabel() {
         playerNameLabel.setText(map.getPlayer().getName());
     }

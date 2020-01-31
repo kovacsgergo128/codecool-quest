@@ -5,6 +5,7 @@ import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
 import com.codecool.quest.logic.actors.Player;
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.ListView;
@@ -38,7 +39,6 @@ public class AiMovement extends Service {
         this.Canvass = Canvas;
         this.Playerr = Player;
         this.Healthh = Health;
-        //this.levelss = levels;
         this.Inventory = inventory;
     }
 
@@ -55,9 +55,11 @@ public class AiMovement extends Service {
                     aiMove();
                     refreshAi();
 
+
                     if (isCancelled())
                     {
                         throw new InterruptedException();
+
 
                     }
                     try {
@@ -103,8 +105,10 @@ public class AiMovement extends Service {
         restartGameIfPlayerDies();
         refreshTiles();
         //refreshPlayerHealthLabel();
-        refreshPlayerNameLabel();
-        refreshInventoryView();
+        //refreshPlayerNameLabel();
+        //refreshInventoryView();
+        //handlePickupButton();
+
 
     }
     public void refreshTiles() {
@@ -200,20 +204,6 @@ public class AiMovement extends Service {
     }
 
 
-    /*
-    private void changeLevel(Cell nextCell) {
-        if (nextCell != null && nextCell.getStairs() != null) {
-            Object[] playerAttributes = this.map.getPlayer().getAttributesForLevelChange();
-            int levelTo = nextCell.getStairs().getLevel();
-            this.levels[map.getCurrentLevel()] = this.map;
-            this.map = this.levels[levelTo];
-            this.map.getPlayer().setAttributesOnNewLevel(playerAttributes);
-
-            refresh();
-        }
-    }
-
-     */
 
 
 }
