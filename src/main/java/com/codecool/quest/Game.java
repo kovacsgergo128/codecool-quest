@@ -7,8 +7,6 @@ import com.codecool.quest.logic.actors.Npc;
 import com.codecool.quest.ui.AlertBox;
 import javafx.concurrent.Worker;
 import com.codecool.quest.ui.LoadGameBox;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,12 +24,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Game {
-    GameMap[] levels = new GameMap[MapFile.values().length];
+    GameMap[] levels = new GameMap[Level.values().length];
     GameMap map;
     Canvas canvas;
     GraphicsContext context;
@@ -41,6 +41,9 @@ public class Game {
     Label playerNameLabel = new Label();
     TextField nameInput = new TextField();
     Button setNameButton = new Button("Set Name");
+    Button saveButton = new Button("Save game");
+    Button cancelSaveButton = new Button("Cancel");
+    TextField savedGameName = new TextField();
     Integer Aimove = 0;
     AiMovement AiMove;
     AiMovement AiMovies;
@@ -53,7 +56,8 @@ public class Game {
     Button loadGameButton = new Button("Load game!");
     Button exitMenuButton = new Button("Exit");
 
-    public void gameStart(Stage primaryStage) {
+    public void gameStart(Stage primaryStage) throws IOException {
+        System.out.println(Arrays.toString(GameSaver.getSavedFiles()));
         window = primaryStage;
 //      2D graphics canvas
         this.loadLevels();
@@ -77,19 +81,30 @@ public class Game {
         ui.setPrefWidth(210);
         ui.setPadding(new Insets(10));
         ui.setVgap(10);
-        ui.add(new Label("Inventory:"), 0, 3);
-        ui.add(pickButton, 0, 6, 2, 1);
+        ui.add(new Label("Inventory:"), 0, 2);
+        ui.add(pickButton, 0, 5, 2, 1);
         pickButton.setDisable(true);
-        ui.add(inventory, 0, 4, 2, 1);
+        ui.add(inventory, 0, 3, 2, 1);
         inventory.setFocusTraversable(false);
         nameInput.setPrefWidth(120);
-        ui.add(nameInput, 0, 8);
-        ui.add(setNameButton, 0, 9);
+        ui.add(nameInput, 0, 7);
+        ui.add(setNameButton, 0, 8);
         setNameButton.setOnAction(this::onSetNameButtonClick);
         ui.add(new Label("Name: "), 0, 0);
         ui.add(playerNameLabel, 1, 0);
+        ui.add(saveButton, 0, 10);
+        ui.add(savedGameName, 0, 9);
+        ui.add(cancelSaveButton, 1, 10);
+        saveButton.setOnAction(this::onSaveGameButtonClick);
+        saveButton.setFocusTraversable(false);
+        cancelSaveButton.setFocusTraversable(false);
+        cancelSaveButton.setOnAction(this::onCancelButton);
+        cancelSaveButton.setVisible(false);
+        savedGameName.setVisible(false);
+        savedGameName.setPrefWidth(120);
         nameInput.setFocusTraversable(false);
         setNameButton.setFocusTraversable(false);
+
 
 
 //      Canvas, HUD wrapper
@@ -114,7 +129,14 @@ public class Game {
         menuLayout.getChildren().addAll(startGameButton, exitMenuButton);
         menuLayout.setAlignment(Pos.CENTER);
         startGameButton.setOnAction(e -> window.setScene(scene));
-        exitMenuButton.setOnAction(e -> window.close());
+        exitMenuButton.setOnAction(e -> System.exit(0));
+        loadGameButton.setOnAction(actionEvent -> {
+            try {
+                onLoadGameButtonClick(actionEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         BackgroundImage myBI = new BackgroundImage(new Image("CClogo.png", 300, 300, false, true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
@@ -125,6 +147,21 @@ public class Game {
         window.setScene(menuSecene);
         window.setTitle("Codecool Quest");
         window.show();
+    }
+
+    private void onLoadGameButtonClick(ActionEvent actionEvent) throws IOException {
+        String[] savedFileNames = GameSaver.getSavedFiles();
+        System.out.println(Arrays.toString(savedFileNames));
+        LoadGameBox.display(Objects.requireNonNull(GameSaver.getSavedFiles()));
+    }
+
+    private void onCancelButton(ActionEvent actionEvent) {
+        savedGameName.clear();
+        savedGameName.setVisible(false);
+        cancelSaveButton.setVisible(false);
+        savedGameName.setFocusTraversable(true);
+        canvas.requestFocus();
+        savedGameName.setFocusTraversable(false);
     }
 
     private void onSetNameButtonClick(ActionEvent actionEvent) {
@@ -141,6 +178,26 @@ public class Game {
     private void onPickButtonClick(ActionEvent actionEvent) {
         map.getPlayer().pickItem();
         refresh();
+    }
+
+    private void onSaveGameButtonClick(ActionEvent actionEvent) {
+        if (savedGameName.isVisible()) {
+            String filename = savedGameName.getText();
+            if (!filename.equals("")){
+                GameSaver.writeGameMapToJsonFile(filename, levels);
+                GameSaver.writeNumberToTXTFile(filename, map.getCurrentLevel());
+                savedGameName.clear();
+                savedGameName.setVisible(false);
+                savedGameName.setFocusTraversable(true);
+                cancelSaveButton.setVisible(false);
+                canvas.requestFocus();
+                savedGameName.setFocusTraversable(false);
+            }
+        }
+        else {
+            savedGameName.setVisible(true);
+            cancelSaveButton.setVisible(true);
+        }
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
@@ -278,7 +335,7 @@ public class Game {
 
     public void loadLevels() {
         int actualIndex = 0;
-        for (MapFile level : MapFile.values()) {
+        for (Level level : Level.values()) {
             levels[actualIndex] = MapLoader.loadMap(level.getLevelMap(), level.getLevelIndex());
             actualIndex++;
         }
