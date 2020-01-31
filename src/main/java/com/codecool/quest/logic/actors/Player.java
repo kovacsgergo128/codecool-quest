@@ -9,6 +9,7 @@ public class Player extends Actor {
     private String name = "Player";
     Inventory inventory = new Inventory();
     private boolean god = false;
+    private boolean hasWon = true;
 
     public Player(Cell cell) {
         super(cell);
@@ -20,6 +21,10 @@ public class Player extends Actor {
         return "player";
     }
 
+    public boolean isHasWon() {
+        return hasWon;
+    }
+
     @Override
     public Cell move(Direction direction) {
         Cell nextCell = cell.getNeighbor(direction);
@@ -28,16 +33,19 @@ public class Player extends Actor {
             return nextCell;
         }
         if (nextCell != null &&
-                nextCell.getDoor() != null &&
-                nextCell.getDoor().isLocked() &&
-                this.inventory.contains("key")) {
+            nextCell.getDoor() != null &&
+            nextCell.getDoor().isLocked() &&
+            this.inventory.contains("key")) {
             this.inventory.removeItemByItemName("key");
             nextCell.getDoor().openDoor();
         } else if (nextCell != null &&
-                nextCell.getDecor() != null &&
-                !this.god &&
-                (nextCell.getDecor().getTileName().equals("bonfire") ||
-                        nextCell.getDecor().getTileName().equals("spikes"))) {
+                   nextCell.getFinish() != null) {
+            this.winGame();
+        } else if (nextCell != null &&
+                   nextCell.getDecor() != null &&
+                   !this.god &&
+                   (nextCell.getDecor().getTileName().equals("bonfire") ||
+                    nextCell.getDecor().getTileName().equals("spikes"))) {
             this.setHealth(this.getHealth() - 2);
         }
         if (name.equals("Max")) {
@@ -54,6 +62,10 @@ public class Player extends Actor {
         return nextCell;
     }
 
+    public void winGame(){
+        hasWon = !hasWon;
+    }
+
     @Override
     public void attack(Actor enemy) {
         if (this.inventory.contains("sword"))
@@ -64,7 +76,7 @@ public class Player extends Actor {
 
     @Override
     public void changeHealth(int hp) {
-        if (hp < 0 && god)  return;
+        if (hp < 0 && god) return;
         super.changeHealth(hp);
     }
 

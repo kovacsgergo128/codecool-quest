@@ -4,6 +4,8 @@ import com.codecool.quest.logic.*;
 import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
+import com.codecool.quest.ui.AlertBox;
+import com.codecool.quest.ui.LoadGameBox;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -49,8 +51,8 @@ public class Game {
     Stage window;
     Scene menuSecene;
     Button startGameButton = new Button("Start game!");
+    Button loadGameButton = new Button("Load game!");
     Button exitMenuButton = new Button("Exit");
-    Button loadGameButton = new Button("Load game");
 
     public void gameStart(Stage primaryStage) throws IOException {
         System.out.println(Arrays.toString(GameSaver.getSavedFiles()));
@@ -121,11 +123,12 @@ public class Game {
 //      Layout & Scene for menu
         VBox menuLayout = new VBox(8);
         startGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        exitMenuButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         loadGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        exitMenuButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         menuLayout.getChildren().addAll(startGameButton, loadGameButton, exitMenuButton);
         menuLayout.setAlignment(Pos.CENTER);
         startGameButton.setOnAction(e -> window.setScene(scene));
+        loadGameButton.setOnAction(e -> LoadGameBox.display("Window title", "Load game?"));
         exitMenuButton.setOnAction(e -> window.close());
         loadGameButton.setOnAction(actionEvent -> {
             try {
@@ -248,6 +251,7 @@ public class Game {
             this.Aimove++;
         }
         restartGameIfPlayerDies();
+        checkPlayerHasWon();
         refreshTiles();
         refreshPlayerHealthLabel();
         refreshPlayerNameLabel();
@@ -264,6 +268,7 @@ public class Game {
             this.Aimove++;
         }
         restartGameIfPlayerDies();
+        checkPlayerHasWon();
         refreshTiles();
         refreshPlayerHealthLabel();
         refreshPlayerNameLabel();
@@ -303,9 +308,14 @@ public class Game {
             actualIndex++;
         }
     }
-
+    public void checkPlayerHasWon(){
+        if(!this.map.getPlayer().isHasWon()){
+            AlertBox.display("Victory window","You won the game!","Play Again", "red", "25px");
+        }
+    }
     public void restartGameIfPlayerDies() {
         if (!this.map.getPlayer().isAlive()) {
+            AlertBox.display(":(", "You Died!", "Try Again?", "red", "25px");
             loadLevels();
             this.map = levels[0];
             this.map.getPlayer().setHealth(10);
@@ -343,6 +353,8 @@ public class Game {
                     Tiles.drawTile(context, cell.getStairs(), targetCellX, targetCellY);
                 } else if (cell.getDecor() != null) {
                     Tiles.drawTile(context, cell.getDecor(), targetCellX, targetCellY);
+                } else if (cell.getFinish() != null) {
+                    Tiles.drawTile(context, cell.getFinish(), targetCellX, targetCellY);
                 } else {
                     Tiles.drawTile(context, cell, targetCellX, targetCellY);
                 }
@@ -412,6 +424,7 @@ public class Game {
         Thread backgroundThread = new Thread(task);
         backgroundThread.start();
     }
+
     public void refreshPlayerNameLabel() {
         playerNameLabel.setText(map.getPlayer().getName());
     }

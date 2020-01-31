@@ -4,6 +4,7 @@ import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.decorations.Decor;
 import com.codecool.quest.logic.interactable.Door;
+import com.codecool.quest.logic.interactable.FinishLine;
 import com.codecool.quest.logic.interactable.Stairs;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -23,6 +24,24 @@ public class Cell implements Drawable {
     private GameMap gameMap;
 
     @JsonManagedReference
+    private FinishLine finish;
+
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
+    public void setGameMap(GameMap gameMap) {
+        this.gameMap = gameMap;
+    }
+
+    public FinishLine getFinish() {
+        return finish;
+    }
+
+    public void setFinish(FinishLine finish) {
+        this.finish = finish;
+    }
+
     private Items item;
     private int x, y;
 

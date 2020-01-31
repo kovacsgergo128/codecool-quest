@@ -6,7 +6,9 @@ import com.codecool.quest.logic.actors.Player;
 import com.codecool.quest.logic.actors.Skeleton;
 import com.codecool.quest.logic.decorations.*;
 import com.codecool.quest.logic.interactable.Door;
+import com.codecool.quest.logic.interactable.FinishLine;
 import com.codecool.quest.logic.interactable.Stairs;
+import com.codecool.quest.logic.interactable.FinishLine;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -100,6 +102,10 @@ public class MapLoader {
                         case '+':
                             cell.setType(CellType.WALL);
                             new GraveStone(cell);
+                            break;
+                        case 'F':
+                            cell.setType(CellType.FLOOR);
+                            new FinishLine(cell);
                             break;
 
                         default:
