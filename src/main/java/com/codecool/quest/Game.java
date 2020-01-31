@@ -6,8 +6,6 @@ import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
 import com.codecool.quest.ui.AlertBox;
 import com.codecool.quest.ui.LoadGameBox;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,15 +23,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.SortedMap;
+import java.util.Objects;
 
 public class Game {
-    GameMap[] levels = new GameMap[MapFile.values().length];
+    GameMap[] levels = new GameMap[Level.values().length];
     GameMap map;
     Canvas canvas;
     GraphicsContext context;
@@ -128,8 +125,7 @@ public class Game {
         menuLayout.getChildren().addAll(startGameButton, loadGameButton, exitMenuButton);
         menuLayout.setAlignment(Pos.CENTER);
         startGameButton.setOnAction(e -> window.setScene(scene));
-        loadGameButton.setOnAction(e -> LoadGameBox.display("Window title", "Load game?"));
-        exitMenuButton.setOnAction(e -> window.close());
+        exitMenuButton.setOnAction(e -> System.exit(0));
         loadGameButton.setOnAction(actionEvent -> {
             try {
                 onLoadGameButtonClick(actionEvent);
@@ -152,7 +148,7 @@ public class Game {
     private void onLoadGameButtonClick(ActionEvent actionEvent) throws IOException {
         String[] savedFileNames = GameSaver.getSavedFiles();
         System.out.println(Arrays.toString(savedFileNames));
-
+        LoadGameBox.display(Objects.requireNonNull(GameSaver.getSavedFiles()));
     }
 
     private void onCancelButton(ActionEvent actionEvent) {
@@ -184,7 +180,8 @@ public class Game {
         if (savedGameName.isVisible()) {
             String filename = savedGameName.getText();
             if (!filename.equals("")){
-                GameSaver.writeSaveFile(filename, levels, map.getCurrentLevel());
+                GameSaver.writeGameMapToJsonFile(filename, levels);
+                GameSaver.writeNumberToTXTFile(filename, map.getCurrentLevel());
                 savedGameName.clear();
                 savedGameName.setVisible(false);
                 savedGameName.setFocusTraversable(true);
@@ -303,7 +300,7 @@ public class Game {
 
     public void loadLevels() {
         int actualIndex = 0;
-        for (MapFile level : MapFile.values()) {
+        for (Level level : Level.values()) {
             levels[actualIndex] = MapLoader.loadMap(level.getLevelMap(), level.getLevelIndex());
             actualIndex++;
         }

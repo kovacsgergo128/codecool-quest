@@ -1,7 +1,10 @@
 package com.codecool.quest.logic;
 
 import com.codecool.quest.logic.actors.Player;
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameMap {
     private int currentLevel;
@@ -22,6 +25,9 @@ public class GameMap {
                 cells[x][y] = new Cell(this, x, y, defaultCellType);
             }
         }
+    }
+    @JsonCreator
+    public GameMap() {
     }
 
     public Cell getCell(int x, int y) {
@@ -48,6 +54,7 @@ public class GameMap {
         return currentLevel;
     }
 
+    @JsonProperty
     public void setCurrentLevel(int level) {
         this.currentLevel = level;
     }

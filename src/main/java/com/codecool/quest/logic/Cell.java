@@ -7,24 +7,35 @@ import com.codecool.quest.logic.interactable.Door;
 import com.codecool.quest.logic.interactable.FinishLine;
 import com.codecool.quest.logic.interactable.Stairs;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 
 public class Cell implements Drawable {
-    @JsonManagedReference
-    private Decor decor;
+
     private CellType type;
+
     @JsonManagedReference
     private Actor actor;
+    @JsonManagedReference
+    private Decor decor;
     @JsonManagedReference
     private Door door;
     @JsonManagedReference
     private Stairs stairs;
+    @JsonManagedReference
+    private FinishLine finish;
 
     @JsonBackReference
     private GameMap gameMap;
 
     @JsonManagedReference
-    private FinishLine finish;
+    private Items item;
+    private int x, y;
+
+    public Cell() {
+    }
 
     public GameMap getGameMap() {
         return gameMap;
@@ -41,9 +52,6 @@ public class Cell implements Drawable {
     public void setFinish(FinishLine finish) {
         this.finish = finish;
     }
-
-    private Items item;
-    private int x, y;
 
     Cell(GameMap gameMap, int x, int y, CellType type) {
         this.gameMap = gameMap;
@@ -97,7 +105,7 @@ public class Cell implements Drawable {
             return null;
         }
     }
-
+    @JsonIgnore
     @Override
     public String getTileName() {
         return type.getTileName();
@@ -119,7 +127,7 @@ public class Cell implements Drawable {
                 this.getY() + direction.getDy() >= this.gameMap.getHeight()
         );
     }
-
+    @JsonIgnore
     public boolean isValidDest() {
         return !(
                 this.type.equals(CellType.WALL) ||

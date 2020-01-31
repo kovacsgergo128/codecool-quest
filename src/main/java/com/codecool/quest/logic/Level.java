@@ -1,6 +1,6 @@
 package com.codecool.quest.logic;
 
-public enum LEVEL {
+public enum Level {
     LEVEL1 (0, "/map.txt"),
     LEVEL2 (1, "/map2.txt"),
     LEVEL3 (2, "/map2.txt"),
@@ -9,7 +9,7 @@ public enum LEVEL {
     private final int levelIndex;
     private final String levelMap;
 
-    LEVEL(int levelIndex, String levelMap) {
+    Level(int levelIndex, String levelMap) {
         this.levelIndex = levelIndex;
         this.levelMap = levelMap;
     }
