@@ -4,6 +4,7 @@ import com.codecool.quest.logic.Items.Items;
 import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.decorations.Decor;
 import com.codecool.quest.logic.interactable.Door;
+import com.codecool.quest.logic.interactable.FinishLine;
 import com.codecool.quest.logic.interactable.Stairs;
 
 public class Cell implements Drawable {
@@ -13,6 +14,24 @@ public class Cell implements Drawable {
     private Door door;
     private Stairs stairs;
     private GameMap gameMap;
+    private FinishLine finish;
+
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
+    public void setGameMap(GameMap gameMap) {
+        this.gameMap = gameMap;
+    }
+
+    public FinishLine getFinish() {
+        return finish;
+    }
+
+    public void setFinish(FinishLine finish) {
+        this.finish = finish;
+    }
+
     private Items item;
     private int x, y;
 
@@ -111,6 +130,8 @@ public class Cell implements Drawable {
     public void setDoor(Door door) {
         this.door = door;
     }
+
+
 
     public void setStairs(Stairs stairs) {
         this.stairs = stairs;

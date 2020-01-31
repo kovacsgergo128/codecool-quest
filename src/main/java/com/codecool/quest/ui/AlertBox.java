@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class AlertBox {
 
-    public static void display(String title, String message, String button){
+    public static void display(String title, String message, String button, String labeFontColor, String fontSize){
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
@@ -18,6 +18,7 @@ public class AlertBox {
         window.setMinWidth(250);
 
         Label label = new Label(message);
+        label.setStyle("-fx-text-fill: red; -fx-font-family: 'Helvetica Neue'; -fx-font-size: 25px; ");
         Button closeButton = new Button(button);
         closeButton.setOnAction(e -> window.close());
 

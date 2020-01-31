@@ -6,6 +6,9 @@ import com.codecool.quest.logic.actors.Actor;
 import com.codecool.quest.logic.actors.Npc;
 import com.codecool.quest.ui.AlertBox;
 import javafx.concurrent.Worker;
+import com.codecool.quest.ui.LoadGameBox;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -47,6 +50,7 @@ public class Game {
     Stage window;
     Scene menuSecene;
     Button startGameButton = new Button("Start game!");
+    Button loadGameButton = new Button("Load game!");
     Button exitMenuButton = new Button("Exit");
 
     public void gameStart(Stage primaryStage) {
@@ -144,9 +148,6 @@ public class Game {
         switch (keyEvent.getCode()) {
             case UP:
                 nextCell = map.getPlayer().move(Direction.NORTH);
-                System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
-
-
                 changeLevel(nextCell);
                 refresh();
                 break;
@@ -220,6 +221,7 @@ public class Game {
 
 
         restartGameIfPlayerDies();
+        checkPlayerHasWon();
         refreshTiles();
         refreshPlayerHealthLabel();
         refreshPlayerNameLabel();
@@ -227,6 +229,21 @@ public class Game {
         handlePickupButton();
     }
 
+    private void refreshAi() {
+        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        context.setFill(Color.BLACK);
+
+        if (this.Aimove == 0) {
+            StartAi();
+            this.Aimove++;
+        }
+        restartGameIfPlayerDies();
+        checkPlayerHasWon();
+        refreshTiles();
+        refreshPlayerHealthLabel();
+        refreshPlayerNameLabel();
+        handlePickupButton();
+    }
 
     private void changeLevel(Cell nextCell) {
         if (nextCell != null && nextCell.getStairs() != null) {
@@ -266,10 +283,14 @@ public class Game {
             actualIndex++;
         }
     }
-
+    public void checkPlayerHasWon(){
+        if(!this.map.getPlayer().isHasWon()){
+            AlertBox.display("Victory window","You won the game!","Play Again", "red", "25px");
+        }
+    }
     public void restartGameIfPlayerDies() {
         if (!this.map.getPlayer().isAlive()) {
-            AlertBox.display(":(", "You Died!", "Try Again?");
+            AlertBox.display(":(", "You Died!", "Try Again?", "red", "25px");
             loadLevels();
             this.map = levels[0];
             this.map.getPlayer().setHealth(10);
@@ -364,7 +385,22 @@ public class Game {
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
 
+    public void StartAi() {
+        Runnable task = () -> {
+            while (true) {
+                aiMove();
+                refreshAi();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    System.out.println("hey");
+                }
+            }
+        };
 
+        Thread backgroundThread = new Thread(task);
+        backgroundThread.start();
+    }
 
     public void refreshPlayerNameLabel() {
         playerNameLabel.setText(map.getPlayer().getName());
