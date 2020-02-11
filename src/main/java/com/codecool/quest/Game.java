@@ -125,8 +125,9 @@ public class Game {
 //      Layout & Scene for menu
         VBox menuLayout = new VBox(8);
         startGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        loadGameButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         exitMenuButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        menuLayout.getChildren().addAll(startGameButton, exitMenuButton);
+        menuLayout.getChildren().addAll(startGameButton, loadGameButton, exitMenuButton);
         menuLayout.setAlignment(Pos.CENTER);
         startGameButton.setOnAction(e -> window.setScene(scene));
         exitMenuButton.setOnAction(e -> System.exit(0));
@@ -389,6 +390,8 @@ public class Game {
                     Tiles.drawTile(context, cell.getStairs(), targetCellX, targetCellY);
                 } else if (cell.getDecor() != null) {
                     Tiles.drawTile(context, cell.getDecor(), targetCellX, targetCellY);
+                } else if (cell.getFinish() != null) {
+                    Tiles.drawTile(context, cell.getFinish(), targetCellX, targetCellY);
                 } else {
                     Tiles.drawTile(context, cell, targetCellX, targetCellY);
                 }

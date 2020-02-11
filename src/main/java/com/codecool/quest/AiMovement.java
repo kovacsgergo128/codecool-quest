@@ -181,7 +181,7 @@ public class AiMovement extends Service {
 
     public void loadLevels() {
         int actualIndex = 0;
-        for (MapFile level : MapFile.values()) {
+        for (Level level : Level.values()) {
             levelss[actualIndex] = MapLoader.loadMap(level.getLevelMap(),level.getLevelIndex());
             actualIndex++;
         }
